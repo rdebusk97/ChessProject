@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using SharpChess.Data.Pieces;
+
+namespace SharpChess.Data
+{
+    public class Tile
+    {
+        public Piece currentPiece { get; set; }
+
+        public void addPiece(Piece p)
+        {
+            currentPiece = p;
+        }
+
+        public void removePiece()
+        {
+            currentPiece = null;
+        }
+
+        public bool hasPiece()
+        {
+            if (currentPiece == null)
+                return false;
+            else
+                return true;
+        }
+
+
+    }
+}
