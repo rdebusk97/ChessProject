@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace SharpChess.Data.Pieces
 {
-    public abstract class Piece
+    public class Queen : Piece
     {
-        public PieceAllegiance allegiance { get; private set; }
-
-        public abstract char toText();
+        public override char toText()
+        {
+            return 'Q';
+        }
     }
 }
