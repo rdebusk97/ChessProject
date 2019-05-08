@@ -12,13 +12,14 @@ namespace SharpChess.Data
         public Piece currentPiece { get; set; }
         public int coordinate { get; set; }
 
+
         public Tile(int coordinate)
         {
             this.coordinate = coordinate;
             currentPiece = null;
         }
 
-        public void addPiece(Piece p)
+        public void setPiece(Piece p)
         {
             currentPiece = p;
         }

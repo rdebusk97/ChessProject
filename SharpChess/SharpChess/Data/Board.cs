@@ -10,30 +10,28 @@ namespace SharpChess.Data
     public class Board
     {
         private const int STANDARD_SIZE = 8;
-        public Tile[,] board; //{ get; private set; }
+        public int specificHeight { get; private set; }
+        public int specificWidth { get; private set; }
+        private Tile[,] board;
 
         //Standard sized board
         public Board()
         {
+            this.specificHeight = STANDARD_SIZE;
+            this.specificWidth = STANDARD_SIZE;
+            createFreshBoard(STANDARD_SIZE, STANDARD_SIZE);
+        }
+
+        private void createFreshBoard(int specificHeight, int specificWidth)
+        {
+            board = new Tile[specificHeight, specificWidth];
             int coordinate = 1;
-            board = new Tile[STANDARD_SIZE, STANDARD_SIZE];
-            for (int j = 0; j < STANDARD_SIZE; j++)
-                for (int i = 0; i < STANDARD_SIZE; i++)
+            for (int j = 0; j < specificWidth; j++)
+                for (int i = 0; i < specificWidth; i++)
                 {
                     board[j, i] = new Tile(coordinate);
                     ++coordinate;
                 }
-        }
-
-        //Non-standard sized board
-        public Board(int specificHeight, int specificWidth) 
-        {
-            board = new Tile[specificHeight, specificWidth];
-        }
-
-        public void createFreshBoard()
-        {
-            //createStandardBoard(); //set up board
         }
 
         public Tile[,] getTileMap()

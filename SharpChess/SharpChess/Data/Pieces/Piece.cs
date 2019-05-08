@@ -9,7 +9,7 @@ namespace SharpChess.Data.Pieces
 {
     public abstract class Piece
     {
-        protected PieceAllegiance allegiance;
+        public PieceAllegiance allegiance { get; set; }
 
         public Piece(PieceAllegiance allegiance)
         {

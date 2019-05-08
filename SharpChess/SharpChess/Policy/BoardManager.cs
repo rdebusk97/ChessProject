@@ -10,13 +10,31 @@ namespace SharpChess.Policy
 {
     public class BoardManager
     {
-        private Board board;
+        private const int BOARD_SIZE = 8;
+        public Board board { get; set; }
 
         private void placePiece(Piece piece, int coordinate)
         {
-            foreach(Tile t in board.board)
+            foreach(Tile t in board.getTileMap())
                 if (t.coordinate == coordinate)
                     t.currentPiece = piece;           
+        }
+
+        public int calculateCoordinate(int xValue, int yValue, int tileSize)
+        {
+            int x = 0, y = 0;
+            for (int i = 0; i < xValue; i++)
+            {
+                x++;
+                i += tileSize;
+            }
+            for (int i = 0; i < yValue; i++)
+            {
+                y++;
+                i += tileSize;
+            }
+            int coordinate = ((y - 1) * (BOARD_SIZE)) + x;
+            return coordinate;
         }
     }
 }
