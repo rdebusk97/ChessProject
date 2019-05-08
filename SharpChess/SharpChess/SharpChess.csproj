@@ -45,10 +45,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\ChessBoard.cs" />
+    <Compile Include="Data\Board.cs" />
+    <Compile Include="Data\Move.cs" />
+    <Compile Include="Data\PieceAllegiance.cs" />
+    <Compile Include="Data\Pieces\King.cs" />
     <Compile Include="Data\Pieces\Piece.cs" />
+    <Compile Include="Data\Pieces\Queen.cs" />
     <Compile Include="Data\Tile.cs" />
-    <Compile Include="Policy\Move.cs" />
+    <Compile Include="Policy\BoardManager.cs" />
     <Compile Include="Policy\MoveManager.cs" />
     <Compile Include="UI\SharpChess.cs">
       <SubType>Form</SubType>

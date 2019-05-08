@@ -28,23 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.boardPanel = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
-            // panel1
+            // boardPanel
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.panel1.Location = new System.Drawing.Point(12, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(720, 720);
-            this.panel1.TabIndex = 0;
+            this.boardPanel.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.boardPanel.Location = new System.Drawing.Point(12, 12);
+            this.boardPanel.Name = "boardPanel";
+            this.boardPanel.Size = new System.Drawing.Size(720, 720);
+            this.boardPanel.TabIndex = 0;
+            this.boardPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.boardPanel_Paint);
             // 
             // SharpChess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 811);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.boardPanel);
             this.Name = "SharpChess";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -53,7 +54,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel boardPanel;
     }
 }
 

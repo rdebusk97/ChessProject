@@ -10,6 +10,13 @@ namespace SharpChess.Data
     public class Tile
     {
         public Piece currentPiece { get; set; }
+        public int coordinate { get; set; }
+
+        public Tile(int coordinate)
+        {
+            this.coordinate = coordinate;
+            currentPiece = null;
+        }
 
         public void addPiece(Piece p)
         {
