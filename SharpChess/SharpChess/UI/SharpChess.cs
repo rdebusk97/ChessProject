@@ -19,6 +19,8 @@ namespace SharpChess
         private const int BOARD_SIZE = 8;
         private const int DEBUG_DIRECTORY_OFFSET = 10;
 
+        private int currentCoordinateClicked;
+
         private Bitmap boardMap;
         private Board board;
         private Tile[,] tileMap;
@@ -32,7 +34,8 @@ namespace SharpChess
             board = new Board();
             tileMap = board.getTileMap();
             boardMap = drawBoard();
-            drawPiece(new King(PieceAllegiance.WHITE), 34);
+            drawInitialPieces();
+            //drawPiece(new King(PieceAllegiance.WHITE), 34);
         }
 
         private Bitmap drawBoard()
@@ -65,28 +68,67 @@ namespace SharpChess
             return tempBitMap;
         }
 
+        private void drawInitialPieces()
+        {
+            foreach (Tile t in tileMap)
+            {
+                if (t.hasPlacedPiece())
+                    drawPiece(t.currentPiece, t.coordinate);
+            }
+        }
+
         private Bitmap drawPiece(Piece piece, int coordinate)
         {
             Image pieceImage = Image.FromFile(imagesDirectory + piece.toImage());
             Graphics graphics = Graphics.FromImage(boardMap);
-            int xPixel = (boardPanel.Width / board.specificWidth) * ((coordinate % BOARD_SIZE) - 1);
-            int yPixel = (boardPanel.Width / board.specificWidth) * ((coordinate / BOARD_SIZE));
             int tileSize = boardPanel.Height / BOARD_SIZE;
+            int xPixel = tileSize * ((coordinate - 1) % (BOARD_SIZE));
+            int yPixel = tileSize * (((coordinate - 1) / (BOARD_SIZE)));
             graphics.DrawImage(pieceImage, xPixel, yPixel, tileSize, tileSize);
             return boardMap;
         }
 
         private Bitmap drawBorder(int coordinate)
         {
-            Pen p = new Pen(Color.Black, 5);
+            Pen p = new Pen(Color.Black, 1);
             Graphics graphics = Graphics.FromImage(boardMap);
-            int tileHeight = (boardPanel.Height / board.specificHeight);
-            int tileWidth = (boardPanel.Width / board.specificWidth);
-            int xCoordinate = (tileHeight * (coordinate % BOARD_SIZE) - 1);
-            int yCoordinate = (tileWidth * ((coordinate / BOARD_SIZE)));
-            graphics.DrawLine(p, xCoordinate, yCoordinate, xCoordinate + tileHeight, yCoordinate);
+            int tileSize = (boardPanel.Height / BOARD_SIZE);
+            int xCoordinate = tileSize * ((coordinate - 1) % (BOARD_SIZE));
+            int yCoordinate = tileSize * (((coordinate - 1) / (BOARD_SIZE)));
+            graphics.DrawLine(p, xCoordinate, yCoordinate, xCoordinate + tileSize - 1, yCoordinate);
+            graphics.DrawLine(p, xCoordinate, yCoordinate, xCoordinate, yCoordinate + tileSize - 1);
+            graphics.DrawLine(p, xCoordinate + tileSize - 1, yCoordinate, xCoordinate + tileSize - 1, yCoordinate + tileSize - 1);
+            graphics.DrawLine(p, xCoordinate, yCoordinate + tileSize - 1, xCoordinate + tileSize - 1, yCoordinate + tileSize - 1);
             return boardMap;
         }
+
+        private Bitmap drawSquare(int coordinate)
+        {
+            SolidBrush tanBrush = new SolidBrush(Color.Tan);
+            SolidBrush beigeBrush = new SolidBrush(Color.Beige);
+            Graphics graphics = Graphics.FromImage(boardMap);
+            int tileSize = (boardPanel.Height / BOARD_SIZE);
+            int xCoordinate = tileSize * ((coordinate - 1) % (BOARD_SIZE));
+            int yCoordinate = tileSize * (((coordinate - 1) / (BOARD_SIZE)));
+            int row = ((coordinate - 1) / BOARD_SIZE);
+            if (row % 2 == 1)
+            {
+                if ((coordinate - 1) % 2 == 0)
+                    graphics.FillRectangle(beigeBrush, xCoordinate, yCoordinate, tileSize, tileSize);
+                else
+                    graphics.FillRectangle(tanBrush, xCoordinate, yCoordinate, tileSize, tileSize);
+            }
+            else
+            {
+                if ((coordinate - 1) % 2 == 0)
+                    graphics.FillRectangle(tanBrush, xCoordinate, yCoordinate, tileSize, tileSize);
+                else
+                    graphics.FillRectangle(beigeBrush, xCoordinate, yCoordinate, tileSize, tileSize);
+            }
+            return boardMap;
+        }
+
+
 
         private Image resizeImage(Image imgToResize, Size size)
         {
@@ -106,9 +148,31 @@ namespace SharpChess
             int yValue = point.Y;
             int tileSize = boardPanel.Height / BOARD_SIZE;
             int coordinate = gameManager.boardManager.calculateCoordinate(xValue, yValue, tileSize);
-            //drawBorder(coordinate);
+            if (coordinate != currentCoordinateClicked)
+            {
+                drawSquare(currentCoordinateClicked);
+                drawBackPlacedPiece(currentCoordinateClicked);
+                drawBorder(coordinate);
+                currentCoordinateClicked = coordinate;
+            }
+            else
+            {
+                drawSquare(coordinate);
+                drawBackPlacedPiece(coordinate);
+                currentCoordinateClicked = 0;
+            }
             label1.Text = "Tile Coordinate: " + coordinate.ToString();
-            drawPiece(new King(PieceAllegiance.WHITE), coordinate);
+            //drawPiece(new King(PieceAllegiance.WHITE), coordinate);
+            boardPanel.Refresh();
         }
+
+        private void drawBackPlacedPiece(int coordinate) //Wish there was an easier way to get around this...
+        {
+            foreach (Tile t in tileMap)
+                if (t.coordinate == coordinate)
+                    if (t.hasPlacedPiece())
+                        drawPiece(t.currentPiece, coordinate);
+        }
+
     }
 }

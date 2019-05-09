@@ -11,6 +11,7 @@ namespace SharpChess.Data
     {
         public Piece currentPiece { get; set; }
         public int coordinate { get; set; }
+        private bool hasPiece = false;
 
 
         public Tile(int coordinate)
@@ -22,19 +23,18 @@ namespace SharpChess.Data
         public void setPiece(Piece p)
         {
             currentPiece = p;
+            hasPiece = true;
         }
 
         public void removePiece()
         {
             currentPiece = null;
+            hasPiece = false;
         }
 
-        public bool hasPiece()
+        public bool hasPlacedPiece()
         {
-            if (currentPiece == null)
-                return false;
-            else
-                return true;
+            return hasPiece;
         }
 
 

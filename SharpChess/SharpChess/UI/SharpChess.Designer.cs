@@ -1,4 +1,6 @@
-﻿namespace SharpChess
+﻿using SharpChess.UI;
+
+namespace SharpChess
 {
     partial class SharpChess
     {
@@ -28,7 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.boardPanel = new System.Windows.Forms.Panel();
+            this.boardPanel = new DoubleBuffer();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -68,7 +70,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel boardPanel;
+        private DoubleBuffer boardPanel;
         private System.Windows.Forms.Label label1;
     }
 }

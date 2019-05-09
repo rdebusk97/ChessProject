@@ -48,12 +48,20 @@
     <Compile Include="Data\Board.cs" />
     <Compile Include="Data\Move.cs" />
     <Compile Include="Data\PieceAllegiance.cs" />
+    <Compile Include="Data\Pieces\Bishop.cs" />
     <Compile Include="Data\Pieces\King.cs" />
+    <Compile Include="Data\Pieces\Knight.cs" />
+    <Compile Include="Data\Pieces\Pawn.cs" />
     <Compile Include="Data\Pieces\Piece.cs" />
     <Compile Include="Data\Pieces\Queen.cs" />
+    <Compile Include="Data\Pieces\Rook.cs" />
     <Compile Include="Data\Tile.cs" />
     <Compile Include="Policy\BoardManager.cs" />
+    <Compile Include="Policy\GameManager.cs" />
     <Compile Include="Policy\MoveManager.cs" />
+    <Compile Include="UI\DoubleBuffer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\SharpChess.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +95,19 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\BLACK_BISHOP.png" />
+    <Content Include="Resources\BLACK_KING.png" />
+    <Content Include="Resources\BLACK_KNIGHT.png" />
+    <Content Include="Resources\BLACK_PAWN.png" />
+    <Content Include="Resources\BLACK_QUEEN.png" />
+    <Content Include="Resources\BLACK_ROOK.png" />
+    <Content Include="Resources\WHITE_BISHOP.png" />
+    <Content Include="Resources\WHITE_KING.png" />
+    <Content Include="Resources\WHITE_KNIGHT.png" />
+    <Content Include="Resources\WHITE_PAWN.png" />
+    <Content Include="Resources\WHITE_QUEEN.png" />
+    <Content Include="Resources\WHITE_ROOK.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
