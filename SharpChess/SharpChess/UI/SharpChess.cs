@@ -31,7 +31,7 @@ namespace SharpChess
         public SharpChess()
         {
             InitializeComponent();
-            board = new Board();
+            board = gameManager.boardManager.board;
             tileMap = board.getTileMap();
             boardMap = drawBoard();
             drawInitialPieces();
@@ -162,6 +162,7 @@ namespace SharpChess
                 currentCoordinateClicked = 0;
             }
             label1.Text = "Tile Coordinate: " + coordinate.ToString();
+            gameManager.boardManager.board.setTile(findTile(coordinate));
             //drawPiece(new King(PieceAllegiance.WHITE), coordinate);
             boardPanel.Refresh();
         }
@@ -172,6 +173,14 @@ namespace SharpChess
                 if (t.coordinate == coordinate)
                     if (t.hasPlacedPiece())
                         drawPiece(t.currentPiece, coordinate);
+        }
+
+        private Tile findTile(int coordinate)
+        {
+            foreach (Tile t in tileMap)
+                if (t.coordinate == coordinate)
+                    return t;
+            return null;
         }
 
     }

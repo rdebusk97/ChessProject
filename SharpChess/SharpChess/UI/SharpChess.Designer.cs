@@ -62,7 +62,7 @@ namespace SharpChess
             this.Controls.Add(this.label1);
             this.Controls.Add(this.boardPanel);
             this.Name = "SharpChess";
-            this.Text = "Form1";
+            this.Text = "SharpChess";
             this.ResumeLayout(false);
             this.PerformLayout();
 
