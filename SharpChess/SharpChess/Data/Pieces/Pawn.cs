@@ -18,6 +18,11 @@ namespace SharpChess.Data.Pieces
             return "/Resources/" + this.allegiance.ToString() + "_PAWN.png";
         }
 
+        public override string toString()
+        {
+            return "PAWN";
+        }
+
         public override char toText()
         {
             return 'P';

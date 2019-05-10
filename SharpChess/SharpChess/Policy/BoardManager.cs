@@ -11,11 +11,18 @@ namespace SharpChess.Policy
     public class BoardManager
     {
         private const int BOARD_SIZE = 8;
-        public Board board { get; set; }
+        private Board board;
+        private MoveManager moveManager;
        
         public BoardManager()
         {
             board = new Board();
+            moveManager = new MoveManager();
+        }
+
+        public Board getBoard()
+        {
+            return board;
         }
 
         private void placePiece(Piece piece, int coordinate)

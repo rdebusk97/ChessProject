@@ -33,9 +33,10 @@ namespace SharpChess.Data
             setDefaultPieces();
         }
 
-        public List<Move> listOfLegalMoves()
+        public List<Move> listOfPotentialMoves()
         {
-            return null;
+            Piece p = selectedTile.currentPiece;
+            p.getListOfMoves();
         }
 
         public void setDefaultPieces()
@@ -55,8 +56,8 @@ namespace SharpChess.Data
             tileMap[7, 0].setPiece(new Rook(PieceAllegiance.WHITE));
             tileMap[7, 1].setPiece(new Knight(PieceAllegiance.WHITE));
             tileMap[7, 2].setPiece(new Bishop(PieceAllegiance.WHITE));
-            tileMap[7, 3].setPiece(new King(PieceAllegiance.WHITE));
-            tileMap[7, 4].setPiece(new Queen(PieceAllegiance.WHITE));
+            tileMap[7, 4].setPiece(new King(PieceAllegiance.WHITE));
+            tileMap[7, 3].setPiece(new Queen(PieceAllegiance.WHITE));
             tileMap[7, 5].setPiece(new Bishop(PieceAllegiance.WHITE));
             tileMap[7, 6].setPiece(new Knight(PieceAllegiance.WHITE));
             tileMap[7, 7].setPiece(new Rook(PieceAllegiance.WHITE));

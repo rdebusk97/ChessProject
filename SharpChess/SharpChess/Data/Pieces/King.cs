@@ -25,5 +25,10 @@ namespace SharpChess.Data.Pieces
         {
             return 'K';
         }
+
+        public override string toString()
+        {
+            return "KING";
+        }
     }
 }

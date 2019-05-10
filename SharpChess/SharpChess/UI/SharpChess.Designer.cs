@@ -32,6 +32,7 @@ namespace SharpChess
         {
             this.boardPanel = new DoubleBuffer();
             this.label1 = new System.Windows.Forms.Label();
+            this.currentPiece_lbl = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // boardPanel
@@ -54,11 +55,22 @@ namespace SharpChess
             this.label1.TabIndex = 1;
             this.label1.Text = "Tile Coordinate:";
             // 
+            // currentPiece_lbl
+            // 
+            this.currentPiece_lbl.AutoSize = true;
+            this.currentPiece_lbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.currentPiece_lbl.Location = new System.Drawing.Point(748, 42);
+            this.currentPiece_lbl.Name = "currentPiece_lbl";
+            this.currentPiece_lbl.Size = new System.Drawing.Size(49, 21);
+            this.currentPiece_lbl.TabIndex = 2;
+            this.currentPiece_lbl.Text = "Piece:";
+            // 
             // SharpChess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 811);
+            this.Controls.Add(this.currentPiece_lbl);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.boardPanel);
             this.Name = "SharpChess";
@@ -72,6 +84,7 @@ namespace SharpChess
 
         private DoubleBuffer boardPanel;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label currentPiece_lbl;
     }
 }
 

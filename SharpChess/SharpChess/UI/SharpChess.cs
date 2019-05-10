@@ -31,12 +31,14 @@ namespace SharpChess
         public SharpChess()
         {
             InitializeComponent();
-            board = gameManager.boardManager.board;
+            board = gameManager.boardManager.getBoard();
             tileMap = board.getTileMap();
             boardMap = drawBoard();
             drawInitialPieces();
             //drawPiece(new King(PieceAllegiance.WHITE), 34);
         }
+
+        #region -- Bitmap Drawing
 
         private Bitmap drawBoard()
         {
@@ -90,15 +92,16 @@ namespace SharpChess
 
         private Bitmap drawBorder(int coordinate)
         {
-            Pen p = new Pen(Color.Black, 1);
+            int penThickness = 2;
+            Pen p = new Pen(Color.Black, penThickness);
             Graphics graphics = Graphics.FromImage(boardMap);
             int tileSize = (boardPanel.Height / BOARD_SIZE);
             int xCoordinate = tileSize * ((coordinate - 1) % (BOARD_SIZE));
             int yCoordinate = tileSize * (((coordinate - 1) / (BOARD_SIZE)));
-            graphics.DrawLine(p, xCoordinate, yCoordinate, xCoordinate + tileSize - 1, yCoordinate);
-            graphics.DrawLine(p, xCoordinate, yCoordinate, xCoordinate, yCoordinate + tileSize - 1);
+            graphics.DrawLine(p, xCoordinate, yCoordinate + 1, xCoordinate + tileSize - 1, yCoordinate + 1);
+            graphics.DrawLine(p, xCoordinate + 1, yCoordinate, xCoordinate + 1, yCoordinate + tileSize - 1);
             graphics.DrawLine(p, xCoordinate + tileSize - 1, yCoordinate, xCoordinate + tileSize - 1, yCoordinate + tileSize - 1);
-            graphics.DrawLine(p, xCoordinate, yCoordinate + tileSize - 1, xCoordinate + tileSize - 1, yCoordinate + tileSize - 1);
+            graphics.DrawLine(p, xCoordinate, yCoordinate + tileSize - 1, xCoordinate + tileSize, yCoordinate + tileSize - 1);
             return boardMap;
         }
 
@@ -128,17 +131,17 @@ namespace SharpChess
             return boardMap;
         }
 
-
-
-        private Image resizeImage(Image imgToResize, Size size)
+        private void drawBackPlacedPiece(int coordinate) //Wish there was an easier way to get around this...
         {
-            return (Image)(new Bitmap(imgToResize, size));
+            foreach (Tile t in tileMap)
+                if (t.coordinate == coordinate)
+                    if (t.hasPlacedPiece())
+                        drawPiece(t.currentPiece, coordinate);
         }
 
-        private void boardPanel_Paint(object sender, PaintEventArgs e)
-        {
-            e.Graphics.DrawImage(boardMap, 0, 0);
-        }
+        #endregion
+
+        #region -- Board Event Handlers
 
         private void boardPanel_MouseClick(object sender, MouseEventArgs e)
         {
@@ -148,32 +151,43 @@ namespace SharpChess
             int yValue = point.Y;
             int tileSize = boardPanel.Height / BOARD_SIZE;
             int coordinate = gameManager.boardManager.calculateCoordinate(xValue, yValue, tileSize);
-            if (coordinate != currentCoordinateClicked)
+            if (findTile(coordinate).hasPlacedPiece())
             {
-                drawSquare(currentCoordinateClicked);
-                drawBackPlacedPiece(currentCoordinateClicked);
-                drawBorder(coordinate);
-                currentCoordinateClicked = coordinate;
+                if (coordinate != currentCoordinateClicked)
+                {
+                    drawSquare(currentCoordinateClicked);
+                    drawBackPlacedPiece(currentCoordinateClicked);
+                    drawBorder(coordinate);
+                    currentCoordinateClicked = coordinate;
+                    gameManager.boardManager.getBoard().setTile(findTile(coordinate));
+                }
+                else
+                {
+                    drawSquare(coordinate);
+                    drawBackPlacedPiece(coordinate);
+                    currentCoordinateClicked = 0;
+                    gameManager.boardManager.getBoard().setTile(null);
+                }
+                displayUpdatedTileLabels(coordinate);
             }
-            else
-            {
-                drawSquare(coordinate);
-                drawBackPlacedPiece(coordinate);
-                currentCoordinateClicked = 0;
-            }
-            label1.Text = "Tile Coordinate: " + coordinate.ToString();
-            gameManager.boardManager.board.setTile(findTile(coordinate));
             //drawPiece(new King(PieceAllegiance.WHITE), coordinate);
             boardPanel.Refresh();
         }
 
-        private void drawBackPlacedPiece(int coordinate) //Wish there was an easier way to get around this...
+        private void boardPanel_Paint(object sender, PaintEventArgs e)
         {
-            foreach (Tile t in tileMap)
-                if (t.coordinate == coordinate)
-                    if (t.hasPlacedPiece())
-                        drawPiece(t.currentPiece, coordinate);
+            e.Graphics.DrawImage(boardMap, 0, 0);
         }
+
+        #endregion
+
+        private void displayUpdatedTileLabels(int coordinate)
+        {
+            label1.Text = "Tile Coordinate: " + coordinate.ToString();
+            if (findTile(coordinate).hasPlacedPiece())
+                currentPiece_lbl.Text = "Piece: " + findTile(coordinate).currentPiece.getAllegiance() + "_" + findTile(coordinate).currentPiece.toString();
+        }
+
 
         private Tile findTile(int coordinate)
         {
@@ -181,6 +195,11 @@ namespace SharpChess
                 if (t.coordinate == coordinate)
                     return t;
             return null;
+        }
+
+        private Image resizeImage(Image imgToResize, Size size)
+        {
+            return (Image)(new Bitmap(imgToResize, size));
         }
 
     }

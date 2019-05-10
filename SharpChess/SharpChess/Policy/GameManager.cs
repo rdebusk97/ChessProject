@@ -10,12 +10,10 @@ namespace SharpChess.Policy
     {
         private const int BOARD_SIZE = 8;
         public BoardManager boardManager { get; private set; }
-        public MoveManager moveManager { get; private set; }
 
         public GameManager()
         {
             boardManager = new BoardManager();
-            moveManager = new MoveManager();
         }
     }
 }
