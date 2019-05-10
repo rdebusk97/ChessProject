@@ -23,21 +23,17 @@ namespace SharpChess.Data
         private void createFreshBoard()
         {
             tileMap = new Tile[STANDARD_SIZE, STANDARD_SIZE];
-            int coordinate = 1;
             for (int j = 0; j < STANDARD_SIZE; j++)
                 for (int i = 0; i < STANDARD_SIZE; i++)
-                {
-                    tileMap[j, i] = new Tile(coordinate);
-                    ++coordinate;
-                }
+                    tileMap[j, i] = new Tile(i, j);
             setDefaultPieces();
         }
 
-        public List<Move> listOfPotentialMoves()
+        /*public List<Move> listOfPotentialMoves()
         {
             Piece p = selectedTile.currentPiece;
             p.getListOfMoves();
-        }
+        }*/
 
         public void setDefaultPieces()
         {

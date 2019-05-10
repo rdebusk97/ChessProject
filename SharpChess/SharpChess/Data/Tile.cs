@@ -9,14 +9,17 @@ namespace SharpChess.Data
 {
     public class Tile
     {
-        public Piece currentPiece { get; set; }
-        public int coordinate { get; set; }
+        public int x { get; private set; }
+        public int y { get; private set; }
+
         private bool hasPiece = false;
+        private Piece currentPiece;
 
 
-        public Tile(int coordinate)
+        public Tile(int x, int y)
         {
-            this.coordinate = coordinate;
+            this.x = x;
+            this.y = y;
             currentPiece = null;
         }
 
@@ -35,6 +38,11 @@ namespace SharpChess.Data
         public bool hasPlacedPiece()
         {
             return hasPiece;
+        }
+
+        public Piece getCurrentPiece()
+        {
+            return currentPiece;
         }
 
 
