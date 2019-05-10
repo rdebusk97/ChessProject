@@ -25,11 +25,9 @@ namespace SharpChess.Policy
             return board;
         }
 
-        private void placePiece(Piece piece, int coordinate)
+        private void placePiece(Piece piece, int x, int y)
         {
-            foreach(Tile t in board.getTileMap())
-                if (t.coordinate == coordinate)
-                    t.currentPiece = piece;           
+            board.getTileMap()[x, y].setPiece(piece);          
         }
 
         public int calculateCoordinate(int xValue, int yValue, int tileSize)

@@ -20,7 +20,7 @@ namespace SharpChess.Policy
 
         public void addToMoveList(Move m)
         {
-            if (m.movedPiece.allegiance == PieceAllegiance.WHITE)
+            if (m.movedPiece.getAllegiance() == PieceAllegiance.WHITE)
                 whiteMoveHistory.Add(m);
             else
                 blackMoveHistory.Add(m);
