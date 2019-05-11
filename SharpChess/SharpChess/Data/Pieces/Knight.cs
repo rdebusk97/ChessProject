@@ -13,6 +13,19 @@ namespace SharpChess.Data.Pieces
             this.allegiance = allegiance;
         }
 
+        public override List<Tuple<int, int>> populateGeneralMoves()
+        {
+            listOfGeneralMoves.Add(Tuple.Create(1, -2));
+            listOfGeneralMoves.Add(Tuple.Create(2, -1));
+            listOfGeneralMoves.Add(Tuple.Create(2, 1));
+            listOfGeneralMoves.Add(Tuple.Create(1, 2));
+            listOfGeneralMoves.Add(Tuple.Create(-1, 2));
+            listOfGeneralMoves.Add(Tuple.Create(-2, 1));
+            listOfGeneralMoves.Add(Tuple.Create(-2, -1));
+            listOfGeneralMoves.Add(Tuple.Create(-1, -2));
+            return listOfGeneralMoves;
+        }
+
         public override string toImage()
         {
             return "/Resources/" + this.allegiance.ToString() + "_KNIGHT.png";
@@ -27,5 +40,6 @@ namespace SharpChess.Data.Pieces
         {
             return 'N';
         }
+        
     }
 }

@@ -10,7 +10,8 @@ namespace SharpChess.Data.Pieces
     public abstract class Piece
     {
         protected PieceAllegiance allegiance;
-        protected Tuple<int, int> borderCoordinates;
+        protected bool hasPlayedMove = false;
+        protected List<Tuple<int, int>> listOfGeneralMoves = new List<Tuple<int, int>>();
 
         public Piece(PieceAllegiance allegiance)
         {
@@ -21,6 +22,9 @@ namespace SharpChess.Data.Pieces
         {
             return allegiance;
         }
+
+
+        public abstract List<Tuple<int, int>> populateGeneralMoves();
 
         public abstract char toText();
         public abstract string toString();

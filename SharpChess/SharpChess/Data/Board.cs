@@ -10,9 +10,9 @@ namespace SharpChess.Data
 {
     public class Board
     {
+        private int boardSize;
         private Tile[,] tileMap;
         private Tile selectedTile;
-        private int boardSize;
 
         //Sizable board
         public Board(int size)
@@ -30,11 +30,6 @@ namespace SharpChess.Data
             setDefaultPieces();
         }
 
-        /*public List<Move> listOfPotentialMoves()
-        {
-            Piece p = selectedTile.currentPiece;
-            p.getListOfMoves();
-        }*/
         public int getBoardSize()
         {
             return boardSize;

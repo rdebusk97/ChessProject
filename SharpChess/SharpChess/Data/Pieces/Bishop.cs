@@ -13,6 +13,15 @@ namespace SharpChess.Data.Pieces
             this.allegiance = allegiance;
         }
 
+        public override List<Tuple<int, int>> populateGeneralMoves()
+        {
+            listOfGeneralMoves.Add(Tuple.Create(-1, -1));
+            listOfGeneralMoves.Add(Tuple.Create(-1, 1));
+            listOfGeneralMoves.Add(Tuple.Create(1, 1));
+            listOfGeneralMoves.Add(Tuple.Create(1, -1));
+            return listOfGeneralMoves;
+        }
+
         public override string toImage()
         {
             return "/Resources/" + this.allegiance.ToString() + "_BISHOP.png";

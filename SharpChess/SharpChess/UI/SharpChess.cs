@@ -53,13 +53,11 @@ namespace SharpChess
             {
                 for (int j = 0; j < boardSize; j++)
                 {
-                    int xPixel = i * tileSize;
-                    int yPixel = j * tileSize;
+                    int xPixel = i * tileSize, yPixel = j * tileSize;
                     if (counter % BOARD_COLORS == 0)
                         graphics.FillRectangle(tanBrush, xPixel, yPixel, tileSize, tileSize);
                     else
                         graphics.FillRectangle(beigeBrush, xPixel, yPixel, tileSize, tileSize);
-
                     counter++;
                 }
                 counter++;
@@ -108,8 +106,7 @@ namespace SharpChess
             SolidBrush tanBrush = new SolidBrush(Color.Tan), beigeBrush = new SolidBrush(Color.Beige);
             Graphics graphics = Graphics.FromImage(boardMap);
             int tileSize = (boardPanel.Height / boardSize);
-            int xCoordinate = tileSize * x, yCoordinate = tileSize * y;
-            int row = y;
+            int xCoordinate = tileSize * x, yCoordinate = tileSize * y, row = y;
             if (row % BOARD_COLORS == 1)
             {
                 if (x % BOARD_COLORS == 0)
@@ -176,6 +173,8 @@ namespace SharpChess
 
         #endregion
 
+        #region -- Form Updates
+
         // Displays current tile and piece clicked
         private void displayUpdatedTileLabels(int x, int y)
         {
@@ -184,6 +183,10 @@ namespace SharpChess
                 currentPiece_lbl.Text = "Piece: " + findTile(x, y).getCurrentPiece().getAllegiance() + 
                     "_" + findTile(x, y).getCurrentPiece().toString();
         }
+
+        #endregion
+
+        #region -- Helper Methods
 
         // Finds tile given x and y coordinates
         private Tile findTile(int x, int y)
@@ -197,5 +200,6 @@ namespace SharpChess
             return (Image)(new Bitmap(imgToResize, size));
         }
 
+        #endregion 
     }
 }

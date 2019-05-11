@@ -30,5 +30,18 @@ namespace SharpChess.Data.Pieces
         {
             return "KING";
         }
+
+        public override List<Tuple<int, int>> populateGeneralMoves()
+        {
+            listOfGeneralMoves.Add(Tuple.Create(-1, -1));
+            listOfGeneralMoves.Add(Tuple.Create(0, -1));
+            listOfGeneralMoves.Add(Tuple.Create(1, -1));
+            listOfGeneralMoves.Add(Tuple.Create(-1, 0));
+            listOfGeneralMoves.Add(Tuple.Create(1, 0));
+            listOfGeneralMoves.Add(Tuple.Create(-1, 1));
+            listOfGeneralMoves.Add(Tuple.Create(0, -1));
+            listOfGeneralMoves.Add(Tuple.Create(1, -1));
+            return listOfGeneralMoves;
+        }
     }
 }
