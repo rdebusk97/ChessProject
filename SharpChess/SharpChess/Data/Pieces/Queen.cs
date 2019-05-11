@@ -13,6 +13,11 @@ namespace SharpChess.Data.Pieces
             this.allegiance = allegiance;
         }
 
+        public override List<Tuple<int, int>> populateGeneralMoves()
+        {
+            throw new NotImplementedException();
+        }
+
         public override string toImage()
         {
             return "/Resources/" + this.allegiance.ToString() + "_QUEEN.png";
