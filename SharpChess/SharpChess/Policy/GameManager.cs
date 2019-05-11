@@ -8,7 +8,6 @@ namespace SharpChess.Policy
 {
     public class GameManager
     {
-        private const int BOARD_SIZE = 8;
         public BoardManager boardManager { get; private set; }
 
         public GameManager()

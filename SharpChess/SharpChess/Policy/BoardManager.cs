@@ -10,13 +10,13 @@ namespace SharpChess.Policy
 {
     public class BoardManager
     {
-        private const int BOARD_SIZE = 8;
         private Board board;
         private MoveManager moveManager;
+        private const int BOARD_SIZE = 8;
        
         public BoardManager()
         {
-            board = new Board();
+            board = new Board(BOARD_SIZE);
             moveManager = new MoveManager();
         }
 
@@ -30,21 +30,5 @@ namespace SharpChess.Policy
             board.getTileMap()[x, y].setPiece(piece);          
         }
 
-        public int calculateCoordinate(int xValue, int yValue, int tileSize)
-        {
-            int x = 0, y = 0;
-            for (int i = 0; i < xValue; i++)
-            {
-                x++;
-                i += tileSize;
-            }
-            for (int i = 0; i < yValue; i++)
-            {
-                y++;
-                i += tileSize;
-            }
-            int coordinate = ((y - 1) * (BOARD_SIZE)) + x;
-            return coordinate;
-        }
     }
 }

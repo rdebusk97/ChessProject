@@ -9,7 +9,7 @@ namespace SharpChess.Data.Pieces
 {
     public class King : Piece
     {
-        public int[] legalMoves = { 1, -1, 8, -8 };
+        public List<Tuple<int, int>> legalMoves;
 
         public King(PieceAllegiance allegiance) : base(allegiance)
         {

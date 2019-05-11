@@ -10,21 +10,22 @@ namespace SharpChess.Data
 {
     public class Board
     {
-        private const int STANDARD_SIZE = 8;
         private Tile[,] tileMap;
         private Tile selectedTile;
+        private int boardSize;
 
-        //Standard sized board
-        public Board()
+        //Sizable board
+        public Board(int size)
         {
-            createFreshBoard();
+            boardSize = size;
+            instantiateBoard(size);
         }
 
-        private void createFreshBoard()
+        private void instantiateBoard(int statedSize)
         {
-            tileMap = new Tile[STANDARD_SIZE, STANDARD_SIZE];
-            for (int j = 0; j < STANDARD_SIZE; j++)
-                for (int i = 0; i < STANDARD_SIZE; i++)
+            tileMap = new Tile[statedSize, statedSize];
+            for (int j = 0; j < statedSize; j++)
+                for (int i = 0; i < statedSize; i++)
                     tileMap[j, i] = new Tile(i, j);
             setDefaultPieces();
         }
@@ -34,6 +35,10 @@ namespace SharpChess.Data
             Piece p = selectedTile.currentPiece;
             p.getListOfMoves();
         }*/
+        public int getBoardSize()
+        {
+            return boardSize;
+        }
 
         public void setDefaultPieces()
         {
@@ -45,9 +50,9 @@ namespace SharpChess.Data
             tileMap[0, 5].setPiece(new Bishop(PieceAllegiance.BLACK));
             tileMap[0, 6].setPiece(new Knight(PieceAllegiance.BLACK));
             tileMap[0, 7].setPiece(new Rook(PieceAllegiance.BLACK));
-            for (int i = 0; i < STANDARD_SIZE; i++)
+            for (int i = 0; i < boardSize; i++)
                 tileMap[1, i].setPiece(new Pawn(PieceAllegiance.BLACK));
-            for (int i = 0; i < STANDARD_SIZE; i++)
+            for (int i = 0; i < boardSize; i++)
                 tileMap[6, i].setPiece(new Pawn(PieceAllegiance.WHITE));
             tileMap[7, 0].setPiece(new Rook(PieceAllegiance.WHITE));
             tileMap[7, 1].setPiece(new Knight(PieceAllegiance.WHITE));

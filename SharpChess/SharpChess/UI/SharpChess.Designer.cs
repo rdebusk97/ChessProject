@@ -49,6 +49,7 @@ namespace SharpChess
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.Control;
             this.label1.Location = new System.Drawing.Point(748, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(118, 21);
@@ -59,6 +60,7 @@ namespace SharpChess
             // 
             this.currentPiece_lbl.AutoSize = true;
             this.currentPiece_lbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.currentPiece_lbl.ForeColor = System.Drawing.SystemColors.Control;
             this.currentPiece_lbl.Location = new System.Drawing.Point(748, 42);
             this.currentPiece_lbl.Name = "currentPiece_lbl";
             this.currentPiece_lbl.Size = new System.Drawing.Size(49, 21);
@@ -69,10 +71,12 @@ namespace SharpChess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(984, 811);
             this.Controls.Add(this.currentPiece_lbl);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.boardPanel);
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Name = "SharpChess";
             this.Text = "SharpChess";
             this.ResumeLayout(false);
