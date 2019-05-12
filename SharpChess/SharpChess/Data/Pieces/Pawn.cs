@@ -8,7 +8,6 @@ namespace SharpChess.Data.Pieces
 {
     public class Pawn : Piece
     {
-
         public Pawn(PieceAllegiance allegiance) : base(allegiance)
         {
             this.allegiance = allegiance;
@@ -32,9 +31,17 @@ namespace SharpChess.Data.Pieces
         public override List<Tuple<int, int>> populateGeneralMoves()
         {
             if (this.allegiance == PieceAllegiance.WHITE)
+            {
                 listOfGeneralMoves.Add(Tuple.Create(0, -1));
+                if (!hasPlayedMove)
+                    listOfGeneralMoves.Add(Tuple.Create(0, -2));
+            }
             else
+            {
                 listOfGeneralMoves.Add(Tuple.Create(0, 1));
+                if (!hasPlayedMove)
+                    listOfGeneralMoves.Add(Tuple.Create(0, 2));
+            }
             return listOfGeneralMoves;
         }
     }

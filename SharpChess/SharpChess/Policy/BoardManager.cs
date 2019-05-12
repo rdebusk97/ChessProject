@@ -13,15 +13,13 @@ namespace SharpChess.Policy
         private const int BOARD_SIZE = 8;
 
         private Board board;
-        private MoveManager moveManager;
 
-        private List<Tuple<int, int>> borderCoordinates = new List<Tuple<int, int>>();
+        //private List<Tuple<int, int>> borderCoordinates = new List<Tuple<int, int>>();
        
         public BoardManager()
         {
             board = new Board(BOARD_SIZE);
-            moveManager = new MoveManager();
-            generateBorderCoordinates(BOARD_SIZE);
+            //generateBorderCoordinates(BOARD_SIZE);
         }
 
         // Returns the instance board
@@ -37,7 +35,7 @@ namespace SharpChess.Policy
         }
 
         // Generates the coordinates that resemble the border (may be unused)
-        private void generateBorderCoordinates(int boardSize)
+        /*private void generateBorderCoordinates(int boardSize)
         {
             for (int i = 0; i < boardSize; i++)
             {
@@ -49,7 +47,7 @@ namespace SharpChess.Policy
                 borderCoordinates.Add(Tuple.Create(i, 0));
                 borderCoordinates.Add(Tuple.Create(i, boardSize - 1));
             }
-        }
+        }*/
 
         // Returns a tile at a coordinate, if nonexistent, return null.
         public Tile findTile(int x, int y)

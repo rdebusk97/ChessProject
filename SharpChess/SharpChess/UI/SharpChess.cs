@@ -31,6 +31,7 @@ namespace SharpChess
 
         private SolidBrush tanBrush = new SolidBrush(Color.Tan);
         private SolidBrush beigeBrush = new SolidBrush(Color.Beige);
+        private SolidBrush khakiBrush = new SolidBrush(Color.Khaki);
 
         private Bitmap boardMap;
         private GameManager gameManager = new GameManager();
@@ -91,19 +92,17 @@ namespace SharpChess
         // Draws a border around a tile at an x and y coordinate
         private Bitmap drawBorder(int x, int y)
         {
-            int penThickness = 2;
+            int penThickness = 2, tileSize = (boardPanel.Height / boardSize);
+            int xCoordinate = tileSize * x, yCoordinate = tileSize * y;
             float ratio = .9f;
             Pen p = new Pen(Color.Black, penThickness);
-            SolidBrush brush = new SolidBrush(Color.Khaki);
             Graphics graphics = Graphics.FromImage(boardMap);
-            int tileSize = (boardPanel.Height / boardSize);
-            int xCoordinate = tileSize * x, yCoordinate = tileSize * y;
-            graphics.FillRectangle(brush, xCoordinate, yCoordinate, tileSize, tileSize);
+            graphics.FillRectangle(khakiBrush, xCoordinate, yCoordinate, tileSize, tileSize);
             drawBackPlacedPiece(x, y);
-            graphics.DrawLine(p, xCoordinate, yCoordinate + 1, xCoordinate + (tileSize * ratio) /*- 1*/, yCoordinate + 1);
-            graphics.DrawLine(p, xCoordinate + 1, yCoordinate, xCoordinate + 1, yCoordinate + (tileSize * ratio) /*- 1*/);
+            graphics.DrawLine(p, xCoordinate, yCoordinate + 1, xCoordinate + (tileSize * ratio), yCoordinate + 1);
+            graphics.DrawLine(p, xCoordinate + 1, yCoordinate, xCoordinate + 1, yCoordinate + (tileSize * ratio));
             //graphics.DrawLine(p, xCoordinate + tileSize - 1, yCoordinate, xCoordinate + tileSize - 1, yCoordinate + tileSize - 1);
-            graphics.DrawLine(p, xCoordinate + tileSize, yCoordinate + tileSize - 1, xCoordinate + tileSize, yCoordinate + tileSize - 1);
+            //graphics.DrawLine(p, xCoordinate + tileSize, yCoordinate + tileSize - 1, xCoordinate + tileSize, yCoordinate + tileSize - 1);
             return boardMap;
         }
 
@@ -113,30 +112,23 @@ namespace SharpChess
             Graphics graphics = Graphics.FromImage(boardMap);
             int tileSize = (boardPanel.Height / boardSize);
             int xCoordinate = tileSize * x, yCoordinate = tileSize * y, row = y;
-            if (row % BOARD_COLORS == 1)
-            {
-                if (x % BOARD_COLORS == 0)
-                    graphics.FillRectangle(beigeBrush, xCoordinate, yCoordinate, tileSize, tileSize);
-                else
-                    graphics.FillRectangle(tanBrush, xCoordinate, yCoordinate, tileSize, tileSize);
-            }
+            if (row % BOARD_COLORS != x % BOARD_COLORS)
+                graphics.FillRectangle(beigeBrush, xCoordinate, yCoordinate, tileSize, tileSize);
             else
-            {
-                if (x % BOARD_COLORS == 0)
-                    graphics.FillRectangle(tanBrush, xCoordinate, yCoordinate, tileSize, tileSize);
-                else
-                    graphics.FillRectangle(beigeBrush, xCoordinate, yCoordinate, tileSize, tileSize);
-            }
+                graphics.FillRectangle(tanBrush, xCoordinate, yCoordinate, tileSize, tileSize);
             return boardMap;
         }
 
         // Draws piece onto the board at a specified x and y coordinate, assuming there is a piece there
         private void drawBackPlacedPiece(int x, int y)
         {
-            foreach (Tile t in gameManager.boardManager.getBoard().getTileMap())
+            if (gameManager.boardManager.findTile(x, y) != null)
+            {
+                Tile t = gameManager.boardManager.findTile(x, y);
                 if (t.x == x && t.y == y)
                     if (t.hasPlacedPiece())
                         drawPiece(t.getCurrentPiece(), x, y);
+            }
         }
 
         #endregion
@@ -149,11 +141,20 @@ namespace SharpChess
             Point point = boardPanel.PointToClient(Cursor.Position);
             int tileSize = boardPanel.Height / boardSize;
             int x = point.X / tileSize, y = point.Y / tileSize;
-            Tile currentTile = findTile(x, y);
-            if (currentTile.hasPlacedPiece())
+            Tile currentTile = gameManager.boardManager.findTile(x, y);
+            if (moveState == MoveState.SELECTED_START && checkPotentialDestinationList(x, y))
+            {
+                Tile oldTile = gameManager.boardManager.findTile(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
+                gameManager.playMove(oldTile.getCurrentPiece(), oldTile, currentTile);
+                drawSquare(oldTile.x, oldTile.y);
+                resetPotentialCoordinates();
+            }
+            else if (currentTile.hasPlacedPiece())
             {
                 if (x != currentCoordinateClicked.Item1 || y != currentCoordinateClicked.Item2)
+                {
                     newlyClickedCoordinate(currentTile);
+                }
                 else
                     closingCurrentCoordinate(currentTile);
                 displayUpdatedTileLabels(x, y);
@@ -161,6 +162,13 @@ namespace SharpChess
             boardPanel.Refresh();
         }
 
+        private bool checkPotentialDestinationList(int x, int y)
+        {
+            foreach (Tuple<int, int> coordinate in potentialCoordinates)
+                if (coordinate.Item1 == x && coordinate.Item2 == y)
+                    return true;
+            return false;
+        }
         // Paints new board
         private void boardPanel_Paint(object sender, PaintEventArgs e)
         {
@@ -175,23 +183,14 @@ namespace SharpChess
         private void displayUpdatedTileLabels(int x, int y)
         {
             label1.Text = "Tile Coordinate: [" + x.ToString() + "," + y.ToString() + "]";
-            if (findTile(x, y).hasPlacedPiece())
-                currentPiece_lbl.Text = "Piece: " + findTile(x, y).getCurrentPiece().getAllegiance() + 
-                    "_" + findTile(x, y).getCurrentPiece().toString();
+            if (gameManager.boardManager.findTile(x, y).hasPlacedPiece())
+                currentPiece_lbl.Text = "Piece: " + gameManager.boardManager.findTile(x, y).getCurrentPiece().getAllegiance() + 
+                    "_" + gameManager.boardManager.findTile(x, y).getCurrentPiece().toString();
         }
 
         #endregion
 
         #region -- Helper Methods
-
-        // Finds tile given x and y coordinates
-        private Tile findTile(int x, int y)
-        {
-            if (0 <= x && x < boardSize && 0 <= y && y < boardSize)
-                return gameManager.boardManager.getBoard().getTileMap()[y, x];
-            else
-                return null;
-        }
 
         // Checks for legal coordinate and will draw the bordered coordinate
         private void drawPotentialDestinations(int newX, int newY, Tile currentTile)
@@ -209,12 +208,7 @@ namespace SharpChess
         {
             drawSquare(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
             drawBackPlacedPiece(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
-            foreach (Tuple<int, int> coordinate in potentialCoordinates)
-            {
-                drawSquare(coordinate.Item1, coordinate.Item2);
-                drawBackPlacedPiece(coordinate.Item1, coordinate.Item2);
-            }
-            potentialCoordinates.Clear();
+            resetPotentialCoordinates();
             drawBorder(currentTile.x, currentTile.y);
             currentCoordinateClicked = Tuple.Create(currentTile.x, currentTile.y);
             gameManager.boardManager.getBoard().setTile(currentTile);
@@ -225,16 +219,23 @@ namespace SharpChess
         // Undisplays current coordinate and opens new one
         private void closingCurrentCoordinate(Tile currentTile)
         {
+            resetPotentialCoordinates();
+            drawSquare(currentTile.x, currentTile.y);
+            drawBackPlacedPiece(currentTile.x, currentTile.y);
+            currentCoordinateClicked = Tuple.Create(-1, -1);
+            gameManager.boardManager.getBoard().setTile(null);
+            moveState = MoveState.NO_SELECTION;
+        }
+
+        // Resets potential coordinates
+        private void resetPotentialCoordinates()
+        {
             foreach (Tuple<int, int> coordinate in potentialCoordinates)
             {
                 drawSquare(coordinate.Item1, coordinate.Item2);
                 drawBackPlacedPiece(coordinate.Item1, coordinate.Item2);
             }
             potentialCoordinates.Clear();
-            drawSquare(currentTile.x, currentTile.y);
-            drawBackPlacedPiece(currentTile.x, currentTile.y);
-            currentCoordinateClicked = Tuple.Create(-1, -1);
-            gameManager.boardManager.getBoard().setTile(null);
         }
 
         // Tests potential destinations and adds them to the list as deemed legal (this needs to be refactored later on)

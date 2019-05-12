@@ -19,6 +19,16 @@ namespace SharpChess.Data.Pieces
             this.populateGeneralMoves();
         }
 
+        public bool hasPlayedFirstMove()
+        {
+            return hasPlayedMove;
+        }
+
+        public void setMovedTrue()
+        {
+            hasPlayedMove = true;
+        }
+
         public PieceAllegiance getAllegiance() => allegiance;
         public List<Tuple<int, int>> getListOfGeneralMoves() => listOfGeneralMoves;
 

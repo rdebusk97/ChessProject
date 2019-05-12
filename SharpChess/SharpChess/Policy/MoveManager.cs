@@ -13,11 +13,6 @@ namespace SharpChess.Policy
         private List<Move> whiteMoveHistory = new List<Move>();
         private List<Move> blackMoveHistory = new List<Move>();
 
-        public void makeMove(Move m)
-        {
-            addToMoveList(m);
-        }
-
         public void addToMoveList(Move m)
         {
             if (m.movedPiece.getAllegiance() == PieceAllegiance.WHITE)
