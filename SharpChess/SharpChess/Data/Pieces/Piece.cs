@@ -16,19 +16,15 @@ namespace SharpChess.Data.Pieces
         public Piece(PieceAllegiance allegiance)
         {
             this.allegiance = allegiance;
+            this.populateGeneralMoves();
         }
 
-        public PieceAllegiance getAllegiance()
-        {
-            return allegiance;
-        }
-
+        public PieceAllegiance getAllegiance() => allegiance;
+        public List<Tuple<int, int>> getListOfGeneralMoves() => listOfGeneralMoves;
 
         public abstract List<Tuple<int, int>> populateGeneralMoves();
-
         public abstract char toText();
         public abstract string toString();
         public abstract string toImage();
-
     }
 }

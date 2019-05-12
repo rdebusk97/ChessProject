@@ -15,7 +15,11 @@ namespace SharpChess.Data.Pieces
 
         public override List<Tuple<int, int>> populateGeneralMoves()
         {
-            throw new NotImplementedException();
+            listOfGeneralMoves.Add(Tuple.Create(-1, 0));
+            listOfGeneralMoves.Add(Tuple.Create(1, 0));
+            listOfGeneralMoves.Add(Tuple.Create(0, 1));
+            listOfGeneralMoves.Add(Tuple.Create(0, -1));
+            return listOfGeneralMoves;
         }
 
         public override string toImage()

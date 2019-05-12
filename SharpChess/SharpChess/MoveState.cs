@@ -8,8 +8,9 @@ namespace SharpChess
 {
     public enum MoveState
     {
-        SELECTED_PIECE,
-        SELECTED_MOVE,
+        NO_SELECTION,
+        SELECTED_START,
+        SELECTED_END,
         GAME_OVER
     }
 }

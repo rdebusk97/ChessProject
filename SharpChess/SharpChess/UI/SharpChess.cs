@@ -18,12 +18,15 @@ namespace SharpChess
     {
         private const int BOARD_COLORS = 2;
         private const int DEBUG_DIRECTORY_OFFSET = 10;
+        private MoveState moveState = MoveState.NO_SELECTION;
 
         // Should probably find a better way to get to the directory than this, but it's a work-around...
         private string imagesDirectory = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName
             .Substring(0, Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName.Length - DEBUG_DIRECTORY_OFFSET); 
 
         private Tuple<int, int> currentCoordinateClicked = new Tuple<int, int>(8, 8);
+        private List<Tuple<int, int>> potentialCoordinates = new List<Tuple<int, int>>();
+
         private int boardSize;
 
         private SolidBrush tanBrush = new SolidBrush(Color.Tan);
@@ -88,13 +91,16 @@ namespace SharpChess
         // Draws a border around a tile at an x and y coordinate
         private Bitmap drawBorder(int x, int y)
         {
-            int penThickness = 2;
+            int penThickness = 1;
             Pen p = new Pen(Color.Black, penThickness);
+            SolidBrush yellowBrush = new SolidBrush(Color.Khaki);
             Graphics graphics = Graphics.FromImage(boardMap);
             int tileSize = (boardPanel.Height / boardSize);
             int xCoordinate = tileSize * x, yCoordinate = tileSize * y;
-            graphics.DrawLine(p, xCoordinate, yCoordinate + 1, xCoordinate + tileSize - 1, yCoordinate + 1);
-            graphics.DrawLine(p, xCoordinate + 1, yCoordinate, xCoordinate + 1, yCoordinate + tileSize - 1);
+            graphics.FillRectangle(yellowBrush, xCoordinate, yCoordinate, tileSize, tileSize);
+            drawBackPlacedPiece(x, y);
+            graphics.DrawLine(p, xCoordinate, yCoordinate /*+ 1*/, xCoordinate + tileSize - 1, yCoordinate /*+ 1*/);
+            graphics.DrawLine(p, xCoordinate /*+ 1*/, yCoordinate, xCoordinate /*+ 1*/, yCoordinate + tileSize - 1);
             graphics.DrawLine(p, xCoordinate + tileSize - 1, yCoordinate, xCoordinate + tileSize - 1, yCoordinate + tileSize - 1);
             graphics.DrawLine(p, xCoordinate, yCoordinate + tileSize - 1, xCoordinate + tileSize, yCoordinate + tileSize - 1);
             return boardMap;
@@ -143,23 +149,13 @@ namespace SharpChess
             Point point = boardPanel.PointToClient(Cursor.Position);
             int tileSize = boardPanel.Height / boardSize;
             int x = point.X / tileSize, y = point.Y / tileSize;
-            if (findTile(x, y).hasPlacedPiece())
+            Tile currentTile = findTile(x, y);
+            if (currentTile.hasPlacedPiece())
             {
-                if (x != currentCoordinateClicked.Item1 || y != currentCoordinateClicked.Item2) 
-                {
-                    drawSquare(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
-                    drawBackPlacedPiece(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
-                    drawBorder(x, y);
-                    currentCoordinateClicked = Tuple.Create(x, y);
-                    gameManager.boardManager.getBoard().setTile(findTile(x, y));
-                }
+                if (x != currentCoordinateClicked.Item1 || y != currentCoordinateClicked.Item2)
+                    newlyClickedCoordinate(currentTile);
                 else
-                {
-                    drawSquare(x, y);
-                    drawBackPlacedPiece(x, y);
-                    currentCoordinateClicked = Tuple.Create(-1, -1); 
-                    gameManager.boardManager.getBoard().setTile(null);
-                }
+                    closingCurrentCoordinate(currentTile);
                 displayUpdatedTileLabels(x, y);
             }
             boardPanel.Refresh();
@@ -191,7 +187,88 @@ namespace SharpChess
         // Finds tile given x and y coordinates
         private Tile findTile(int x, int y)
         {
-            return gameManager.boardManager.getBoard().getTileMap()[y, x];
+            if (0 <= x && x < boardSize && 0 <= y && y < boardSize)
+                return gameManager.boardManager.getBoard().getTileMap()[y, x];
+            else
+                return null;
+        }
+
+        // Checks for legal coordinate and will draw the bordered coordinate
+        private void drawPotentialDestinations(int newX, int newY, Tile currentTile)
+        {
+            if (0 <= newX && newX < boardSize && 0 <= newY && newY < boardSize) //legal spot on board
+            {
+                drawBorder(newX, newY);
+                potentialCoordinates.Add(Tuple.Create(newX, newY));
+            }
+        }
+
+        // Displays new bordered coordinate and its potential moves
+        private void newlyClickedCoordinate(Tile currentTile)
+        {
+            drawSquare(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
+            drawBackPlacedPiece(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
+            foreach (Tuple<int, int> coordinate in potentialCoordinates)
+            {
+                drawSquare(coordinate.Item1, coordinate.Item2);
+                drawBackPlacedPiece(coordinate.Item1, coordinate.Item2);
+            }
+            potentialCoordinates.Clear();
+            drawBorder(currentTile.x, currentTile.y);
+            currentCoordinateClicked = Tuple.Create(currentTile.x, currentTile.y);
+            gameManager.boardManager.getBoard().setTile(currentTile);
+            testPotentialDestinations(currentTile);
+            moveState = MoveState.SELECTED_START; //move states will become important later on
+        }
+
+        // Undisplays current coordinate and opens new one
+        private void closingCurrentCoordinate(Tile currentTile)
+        {
+            foreach (Tuple<int, int> coordinate in potentialCoordinates)
+            {
+                drawSquare(coordinate.Item1, coordinate.Item2);
+                drawBackPlacedPiece(coordinate.Item1, coordinate.Item2);
+            }
+            potentialCoordinates.Clear();
+            drawSquare(currentTile.x, currentTile.y);
+            drawBackPlacedPiece(currentTile.x, currentTile.y);
+            currentCoordinateClicked = Tuple.Create(-1, -1);
+            gameManager.boardManager.getBoard().setTile(null);
+        }
+
+        // Tests potential destinations and adds them to the list as deemed legal
+        private void testPotentialDestinations(Tile currentTile)
+        {
+            int x = currentTile.x, y = currentTile.y;
+            Piece debatedPiece = currentTile.getCurrentPiece();
+            if (debatedPiece is Pawn || debatedPiece is King || debatedPiece is Knight)
+                foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
+                {
+                    int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
+                    if (!findTile(newX, newY).hasPlacedPiece())
+                        drawPotentialDestinations(newX, newY, currentTile);
+                    else if (findTile(newX, newY).getCurrentPiece().getAllegiance() != debatedPiece.getAllegiance())
+                        drawPotentialDestinations(newX, newY, currentTile);
+                }
+            else
+                foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
+                {
+                    bool foundFirstCollision = false;
+                    int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
+                    while (findTile(newX, newY) != null && !foundFirstCollision) //Problem with shading a friendly tile (issue in here).
+                    {
+                        drawPotentialDestinations(newX, newY, currentTile);
+                        if (!findTile(newX, newY).hasPlacedPiece())
+                        {
+                            newX += coordinate.Item1;
+                            newY += coordinate.Item2;
+                        }
+                        else
+                        {
+                            foundFirstCollision = true;
+                        }
+                    }
+                }
         }
 
         // Resizes images to a specified size (currently not used)

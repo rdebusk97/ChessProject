@@ -37,7 +37,7 @@ namespace SharpChess.Data
 
         public void setDefaultPieces()
         {
-            tileMap[0, 0].setPiece(new Rook(PieceAllegiance.BLACK));
+            /*tileMap[0, 0].setPiece(new Rook(PieceAllegiance.BLACK));
             tileMap[0, 1].setPiece(new Knight(PieceAllegiance.BLACK));
             tileMap[0, 2].setPiece(new Bishop(PieceAllegiance.BLACK));
             tileMap[0, 3].setPiece(new Queen(PieceAllegiance.BLACK));
@@ -56,7 +56,11 @@ namespace SharpChess.Data
             tileMap[7, 3].setPiece(new Queen(PieceAllegiance.WHITE));
             tileMap[7, 5].setPiece(new Bishop(PieceAllegiance.WHITE));
             tileMap[7, 6].setPiece(new Knight(PieceAllegiance.WHITE));
-            tileMap[7, 7].setPiece(new Rook(PieceAllegiance.WHITE));
+            tileMap[7, 7].setPiece(new Rook(PieceAllegiance.WHITE));*/
+            tileMap[4, 4].setPiece(new Knight(PieceAllegiance.WHITE));
+            tileMap[3, 4].setPiece(new Queen(PieceAllegiance.WHITE));
+            tileMap[0, 0].setPiece(new Bishop(PieceAllegiance.BLACK));
+            tileMap[3, 3].setPiece(new Bishop(PieceAllegiance.BLACK));
         }
 
         public Tile[,] getTileMap()
