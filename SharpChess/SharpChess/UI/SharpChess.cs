@@ -91,25 +91,25 @@ namespace SharpChess
         // Draws a border around a tile at an x and y coordinate
         private Bitmap drawBorder(int x, int y)
         {
-            int penThickness = 1;
+            int penThickness = 2;
+            float ratio = .9f;
             Pen p = new Pen(Color.Black, penThickness);
-            SolidBrush yellowBrush = new SolidBrush(Color.Khaki);
+            SolidBrush brush = new SolidBrush(Color.Khaki);
             Graphics graphics = Graphics.FromImage(boardMap);
             int tileSize = (boardPanel.Height / boardSize);
             int xCoordinate = tileSize * x, yCoordinate = tileSize * y;
-            graphics.FillRectangle(yellowBrush, xCoordinate, yCoordinate, tileSize, tileSize);
+            graphics.FillRectangle(brush, xCoordinate, yCoordinate, tileSize, tileSize);
             drawBackPlacedPiece(x, y);
-            graphics.DrawLine(p, xCoordinate, yCoordinate /*+ 1*/, xCoordinate + tileSize - 1, yCoordinate /*+ 1*/);
-            graphics.DrawLine(p, xCoordinate /*+ 1*/, yCoordinate, xCoordinate /*+ 1*/, yCoordinate + tileSize - 1);
-            graphics.DrawLine(p, xCoordinate + tileSize - 1, yCoordinate, xCoordinate + tileSize - 1, yCoordinate + tileSize - 1);
-            graphics.DrawLine(p, xCoordinate, yCoordinate + tileSize - 1, xCoordinate + tileSize, yCoordinate + tileSize - 1);
+            graphics.DrawLine(p, xCoordinate, yCoordinate + 1, xCoordinate + (tileSize * ratio) /*- 1*/, yCoordinate + 1);
+            graphics.DrawLine(p, xCoordinate + 1, yCoordinate, xCoordinate + 1, yCoordinate + (tileSize * ratio) /*- 1*/);
+            //graphics.DrawLine(p, xCoordinate + tileSize - 1, yCoordinate, xCoordinate + tileSize - 1, yCoordinate + tileSize - 1);
+            graphics.DrawLine(p, xCoordinate + tileSize, yCoordinate + tileSize - 1, xCoordinate + tileSize, yCoordinate + tileSize - 1);
             return boardMap;
         }
 
         // Draws new tile square over existing (as to reset the tile)
         private Bitmap drawSquare(int x, int y)
         {
-            SolidBrush tanBrush = new SolidBrush(Color.Tan), beigeBrush = new SolidBrush(Color.Beige);
             Graphics graphics = Graphics.FromImage(boardMap);
             int tileSize = (boardPanel.Height / boardSize);
             int xCoordinate = tileSize * x, yCoordinate = tileSize * y, row = y;
@@ -200,6 +200,7 @@ namespace SharpChess
             {
                 drawBorder(newX, newY);
                 potentialCoordinates.Add(Tuple.Create(newX, newY));
+                boardPanel.Refresh();
             }
         }
 
@@ -236,37 +237,38 @@ namespace SharpChess
             gameManager.boardManager.getBoard().setTile(null);
         }
 
-        // Tests potential destinations and adds them to the list as deemed legal
+        // Tests potential destinations and adds them to the list as deemed legal (this needs to be refactored later on)
         private void testPotentialDestinations(Tile currentTile)
         {
             int x = currentTile.x, y = currentTile.y;
             Piece debatedPiece = currentTile.getCurrentPiece();
-            if (debatedPiece is Pawn || debatedPiece is King || debatedPiece is Knight)
+            if (debatedPiece is Pawn || debatedPiece is King || debatedPiece is Knight) //Simple moving pieces (PAWN will be worked with later)
                 foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
                 {
                     int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
-                    if (!findTile(newX, newY).hasPlacedPiece())
-                        drawPotentialDestinations(newX, newY, currentTile);
-                    else if (findTile(newX, newY).getCurrentPiece().getAllegiance() != debatedPiece.getAllegiance())
+                    if (gameManager.boardManager.testPotentialSimplexDestination(debatedPiece, newX, newY))
                         drawPotentialDestinations(newX, newY, currentTile);
                 }
             else
-                foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
+                foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves()) //More complex moving pieces
                 {
                     bool foundFirstCollision = false;
                     int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
-                    while (findTile(newX, newY) != null && !foundFirstCollision) //Problem with shading a friendly tile (issue in here).
+                    while (!foundFirstCollision)
                     {
-                        drawPotentialDestinations(newX, newY, currentTile);
-                        if (!findTile(newX, newY).hasPlacedPiece())
+                        if (gameManager.boardManager.testPotentialComplexDestination(debatedPiece, newX, newY) == 1)
                         {
+                            drawPotentialDestinations(newX, newY, currentTile);
                             newX += coordinate.Item1;
                             newY += coordinate.Item2;
                         }
-                        else
+                        else if (gameManager.boardManager.testPotentialComplexDestination(debatedPiece, newX, newY) == 0)
                         {
+                            drawPotentialDestinations(newX, newY, currentTile);
                             foundFirstCollision = true;
                         }
+                        else
+                            foundFirstCollision = true;
                     }
                 }
         }

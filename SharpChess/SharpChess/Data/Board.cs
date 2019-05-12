@@ -61,6 +61,10 @@ namespace SharpChess.Data
             tileMap[3, 4].setPiece(new Queen(PieceAllegiance.WHITE));
             tileMap[0, 0].setPiece(new Bishop(PieceAllegiance.BLACK));
             tileMap[3, 3].setPiece(new Bishop(PieceAllegiance.BLACK));
+            tileMap[7, 4].setPiece(new Rook(PieceAllegiance.BLACK));
+            tileMap[1, 6].setPiece(new King(PieceAllegiance.WHITE));
+            tileMap[0, 7].setPiece(new King(PieceAllegiance.WHITE));
+            tileMap[5, 6].setPiece(new King(PieceAllegiance.WHITE));
         }
 
         public Tile[,] getTileMap()
