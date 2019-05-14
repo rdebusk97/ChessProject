@@ -30,19 +30,27 @@ namespace SharpChess.Data.Pieces
 
         public override List<Tuple<int, int>> populateGeneralMoves()
         {
-            if (this.allegiance == PieceAllegiance.WHITE)
-            {
-                listOfGeneralMoves.Add(Tuple.Create(0, -1));
-                if (!hasPlayedMove)
-                    listOfGeneralMoves.Add(Tuple.Create(0, -2));
-            }
-            else
-            {
-                listOfGeneralMoves.Add(Tuple.Create(0, 1));
-                if (!hasPlayedMove)
-                    listOfGeneralMoves.Add(Tuple.Create(0, 2));
-            }
+            listOfGeneralMoves.Clear();
+            int allegianceDirection = getAllegianceValue();
+            listOfGeneralMoves.Add(Tuple.Create(0, allegianceDirection));
+            if (!hasPlayedFirstMove())
+                listOfGeneralMoves.Add(Tuple.Create(0, allegianceDirection * 2));
+            listOfGeneralMoves.Add(Tuple.Create(-1, allegianceDirection));
+            listOfGeneralMoves.Add(Tuple.Create(1, allegianceDirection));
             return listOfGeneralMoves;
+        }
+
+        public List<Tuple<int, int>> addEnPassantMove()
+        {
+            return listOfGeneralMoves;
+        }
+
+        private int getAllegianceValue()
+        {
+            if (allegiance == PieceAllegiance.WHITE)
+                return -1;
+            else
+                return 1;
         }
     }
 }

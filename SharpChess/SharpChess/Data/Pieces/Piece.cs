@@ -10,13 +10,14 @@ namespace SharpChess.Data.Pieces
     public abstract class Piece
     {
         protected PieceAllegiance allegiance;
-        protected bool hasPlayedMove = false;
+        protected bool hasPlayedMove;
         protected List<Tuple<int, int>> listOfGeneralMoves = new List<Tuple<int, int>>();
 
         public Piece(PieceAllegiance allegiance)
         {
             this.allegiance = allegiance;
-            this.populateGeneralMoves();
+            populateGeneralMoves();
+            hasPlayedMove = false;
         }
 
         public bool hasPlayedFirstMove()

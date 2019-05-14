@@ -10,7 +10,6 @@ namespace SharpChess
     {
         NO_SELECTION,
         SELECTED_START,
-        SELECTED_END,
         GAME_OVER
     }
 }

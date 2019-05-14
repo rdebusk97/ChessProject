@@ -27,7 +27,10 @@ namespace SharpChess.Policy
             endTile.setPiece(piece);
             startTile.removePiece();
             if (!piece.hasPlayedFirstMove())
+            {
                 piece.setMovedTrue();
+                piece.populateGeneralMoves();
+            }
             moveManager.addToMoveList(new Move(startTile, endTile, piece));
         }
 

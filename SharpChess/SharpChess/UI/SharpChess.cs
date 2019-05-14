@@ -51,7 +51,7 @@ namespace SharpChess
         private Bitmap drawBoard()
         {
             Bitmap tempBitMap = new Bitmap(boardPanel.Width, boardPanel.Height);
-            Graphics graphics = Graphics.FromImage(tempBitMap);
+            Graphics tempGraphics = Graphics.FromImage(tempBitMap);
             int counter = 0, tileSize = boardPanel.Height / boardSize;
             for (int i = 0; i < boardSize; i++)  
             {
@@ -59,14 +59,14 @@ namespace SharpChess
                 {
                     int xPixel = i * tileSize, yPixel = j * tileSize;
                     if (counter % BOARD_COLORS == 0)
-                        graphics.FillRectangle(tanBrush, xPixel, yPixel, tileSize, tileSize);
+                        tempGraphics.FillRectangle(tanBrush, xPixel, yPixel, tileSize, tileSize);
                     else
-                        graphics.FillRectangle(beigeBrush, xPixel, yPixel, tileSize, tileSize);
+                        tempGraphics.FillRectangle(beigeBrush, xPixel, yPixel, tileSize, tileSize);
                     counter++;
                 }
                 counter++;
             }
-            graphics.DrawImage(tempBitMap, 0, 0);
+            tempGraphics.DrawImage(tempBitMap, 0, 0);
             return tempBitMap;
         }
 
@@ -152,9 +152,7 @@ namespace SharpChess
             else if (currentTile.hasPlacedPiece())
             {
                 if (x != currentCoordinateClicked.Item1 || y != currentCoordinateClicked.Item2)
-                {
                     newlyClickedCoordinate(currentTile);
-                }
                 else
                     closingCurrentCoordinate(currentTile);
                 displayUpdatedTileLabels(x, y);
@@ -169,6 +167,7 @@ namespace SharpChess
                     return true;
             return false;
         }
+
         // Paints new board
         private void boardPanel_Paint(object sender, PaintEventArgs e)
         {
@@ -183,9 +182,8 @@ namespace SharpChess
         private void displayUpdatedTileLabels(int x, int y)
         {
             label1.Text = "Tile Coordinate: [" + x.ToString() + "," + y.ToString() + "]";
-            if (gameManager.boardManager.findTile(x, y).hasPlacedPiece())
-                currentPiece_lbl.Text = "Piece: " + gameManager.boardManager.findTile(x, y).getCurrentPiece().getAllegiance() + 
-                    "_" + gameManager.boardManager.findTile(x, y).getCurrentPiece().toString();
+            currentPiece_lbl.Text = "Piece: " + gameManager.boardManager.findTile(x, y).getCurrentPiece().getAllegiance() + 
+                "_" + gameManager.boardManager.findTile(x, y).getCurrentPiece().toString();
         }
 
         #endregion
@@ -243,7 +241,14 @@ namespace SharpChess
         {
             int x = currentTile.x, y = currentTile.y;
             Piece debatedPiece = currentTile.getCurrentPiece();
-            if (debatedPiece is Pawn || debatedPiece is King || debatedPiece is Knight) //Simple moving pieces (PAWN will be worked with later)
+            if (debatedPiece is Pawn)
+                foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
+                {
+                    int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
+                    if (gameManager.boardManager.testPotentialPawnDestination(currentTile, newX, newY))
+                        drawPotentialDestinations(newX, newY, currentTile);
+                }
+            else if (debatedPiece is King || debatedPiece is Knight) //Simple moving pieces (PAWN will be worked with later)
                 foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
                 {
                     int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
@@ -275,10 +280,10 @@ namespace SharpChess
         }
 
         // Resizes images to a specified size (currently not used)
-        private Image resizeImage(Image imgToResize, Size size)
+        /*private Image resizeImage(Image imgToResize, Size size)
         {
             return (Image)(new Bitmap(imgToResize, size));
-        }
+        }*/
 
         #endregion 
     }

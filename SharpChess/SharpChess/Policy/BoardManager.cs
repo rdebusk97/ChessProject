@@ -11,15 +11,11 @@ namespace SharpChess.Policy
     public class BoardManager
     {
         private const int BOARD_SIZE = 8;
-
         private Board board;
-
-        //private List<Tuple<int, int>> borderCoordinates = new List<Tuple<int, int>>();
        
         public BoardManager()
         {
             board = new Board(BOARD_SIZE);
-            //generateBorderCoordinates(BOARD_SIZE);
         }
 
         // Returns the instance board
@@ -34,20 +30,14 @@ namespace SharpChess.Policy
             board.getTileMap()[x, y].setPiece(piece);          
         }
 
-        // Generates the coordinates that resemble the border (may be unused)
-        /*private void generateBorderCoordinates(int boardSize)
+        // Tests two pieces allegiances
+        private bool testSameAllegiance(Piece p1, Piece p2)
         {
-            for (int i = 0; i < boardSize; i++)
-            {
-                borderCoordinates.Add(Tuple.Create(0, i));
-                borderCoordinates.Add(Tuple.Create(boardSize - 1, i));
-            }
-            for (int i = 1; i < boardSize - 1; i++)
-            {
-                borderCoordinates.Add(Tuple.Create(i, 0));
-                borderCoordinates.Add(Tuple.Create(i, boardSize - 1));
-            }
-        }*/
+            if (p1.getAllegiance() == p2.getAllegiance())
+                return true;
+            else
+                return false;
+        }
 
         // Returns a tile at a coordinate, if nonexistent, return null.
         public Tile findTile(int x, int y)
@@ -60,9 +50,19 @@ namespace SharpChess.Policy
 
         #region -- Destination Candidacy
 
-        public void testPotentialPawnDestination(Tile currentTile)
+        // Used for testing pawn piece destinations
+        public bool testPotentialPawnDestination(Tile currentTile, int newX, int newY)
         {
-            throw new NotImplementedException();
+            Piece debatedPiece = currentTile.getCurrentPiece();
+            if (findTile(newX, newY) != null)
+            {
+                if ((currentTile.x - newX == 0) && !findTile(newX, newY).hasPlacedPiece())
+                    return true;
+                if (findTile(newX, newY).hasPlacedPiece() && (currentTile.x - newX != 0))
+                    if (!testSameAllegiance(findTile(newX, newY).getCurrentPiece(), debatedPiece))
+                        return true;
+            }
+            return false;
         }
 
         // Used for testing simplistic piece destinations (i.e. Knight, King)
@@ -72,7 +72,7 @@ namespace SharpChess.Policy
             {
                 if (!findTile(newX, newY).hasPlacedPiece())
                     return true;
-                else if (findTile(newX, newY).getCurrentPiece().getAllegiance() != debatedPiece.getAllegiance())
+                else if (!testSameAllegiance(findTile(newX, newY).getCurrentPiece(), debatedPiece))
                     return true;
             }
             return false;
@@ -85,11 +85,8 @@ namespace SharpChess.Policy
             {
                 if (!findTile(newX, newY).hasPlacedPiece())
                     return 1;
-                else
-                {
-                    if (findTile(newX, newY).getCurrentPiece().getAllegiance() != debatedPiece.getAllegiance())
-                        return 0;
-                }
+                else if (!testSameAllegiance(findTile(newX, newY).getCurrentPiece(), debatedPiece))
+                    return 0;
             }
             return -1;
         }
