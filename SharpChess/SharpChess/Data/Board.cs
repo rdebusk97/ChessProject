@@ -30,6 +30,14 @@ namespace SharpChess.Data
             setDefaultPieces();
         }
 
+        public void resetBoard()
+        {
+            foreach (Tile t in tileMap)
+                if (t.hasPlacedPiece())
+                    t.removePiece();
+            setDefaultPieces();
+        }
+
         public int getBoardSize()
         {
             return boardSize;

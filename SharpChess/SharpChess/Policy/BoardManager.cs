@@ -56,9 +56,11 @@ namespace SharpChess.Policy
             Piece debatedPiece = currentTile.getCurrentPiece();
             if (findTile(newX, newY) != null)
             {
-                if ((currentTile.x - newX == 0) && !findTile(newX, newY).hasPlacedPiece())
+                if (Math.Abs(currentTile.y - newY) == 2 && findTile(newX, (currentTile.y + newY) / 2).hasPlacedPiece())
+                    return false;
+                else if ((currentTile.x - newX == 0) && !findTile(newX, newY).hasPlacedPiece())
                     return true;
-                if (findTile(newX, newY).hasPlacedPiece() && (currentTile.x - newX != 0))
+                else if (findTile(newX, newY).hasPlacedPiece() && (currentTile.x - newX != 0))
                     if (!testSameAllegiance(findTile(newX, newY).getCurrentPiece(), debatedPiece))
                         return true;
             }

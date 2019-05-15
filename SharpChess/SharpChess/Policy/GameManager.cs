@@ -22,6 +22,13 @@ namespace SharpChess.Policy
             moveManager = new MoveManager();
         }
 
+        public void reset()
+        {
+            GAME_OVER = false;
+            pieceTurn = PieceAllegiance.WHITE;
+            moveManager.clearLists();
+        }
+
         public void playMove(Piece piece, Tile startTile, Tile endTile)
         {
             endTile.setPiece(piece);

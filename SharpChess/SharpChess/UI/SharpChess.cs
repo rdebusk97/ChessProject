@@ -101,8 +101,6 @@ namespace SharpChess
             drawBackPlacedPiece(x, y);
             graphics.DrawLine(p, xCoordinate, yCoordinate + 1, xCoordinate + (tileSize * ratio), yCoordinate + 1);
             graphics.DrawLine(p, xCoordinate + 1, yCoordinate, xCoordinate + 1, yCoordinate + (tileSize * ratio));
-            //graphics.DrawLine(p, xCoordinate + tileSize - 1, yCoordinate, xCoordinate + tileSize - 1, yCoordinate + tileSize - 1);
-            //graphics.DrawLine(p, xCoordinate + tileSize, yCoordinate + tileSize - 1, xCoordinate + tileSize, yCoordinate + tileSize - 1);
             return boardMap;
         }
 
@@ -174,6 +172,15 @@ namespace SharpChess
             e.Graphics.DrawImage(boardMap, 0, 0);
         }
 
+        private void newGame_btn_Click(object sender, EventArgs e)
+        {
+            gameManager.boardManager.getBoard().resetBoard();
+            boardMap = drawBoard();
+            drawInitialPieces();
+            gameManager.reset();
+            boardPanel.Refresh();
+        }
+
         #endregion
 
         #region -- Form Updates
@@ -193,7 +200,7 @@ namespace SharpChess
         // Checks for legal coordinate and will draw the bordered coordinate
         private void drawPotentialDestinations(int newX, int newY, Tile currentTile)
         {
-            if (0 <= newX && newX < boardSize && 0 <= newY && newY < boardSize) //legal spot on board
+            if (0 <= newX && newX < boardSize && 0 <= newY && newY < boardSize) //Legal spot on board
             {
                 drawBorder(newX, newY);
                 potentialCoordinates.Add(Tuple.Create(newX, newY));
@@ -279,12 +286,6 @@ namespace SharpChess
                 }
         }
 
-        // Resizes images to a specified size (currently not used)
-        /*private Image resizeImage(Image imgToResize, Size size)
-        {
-            return (Image)(new Bitmap(imgToResize, size));
-        }*/
-
-        #endregion 
+        #endregion
     }
 }

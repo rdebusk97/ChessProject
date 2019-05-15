@@ -33,6 +33,8 @@ namespace SharpChess
             this.boardPanel = new DoubleBuffer();
             this.label1 = new System.Windows.Forms.Label();
             this.currentPiece_lbl = new System.Windows.Forms.Label();
+            this.newGame_btn = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // boardPanel
@@ -67,12 +69,37 @@ namespace SharpChess
             this.currentPiece_lbl.TabIndex = 2;
             this.currentPiece_lbl.Text = "Piece:";
             // 
+            // newGame_btn
+            // 
+            this.newGame_btn.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.newGame_btn.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.newGame_btn.ForeColor = System.Drawing.SystemColors.Control;
+            this.newGame_btn.Location = new System.Drawing.Point(12, 744);
+            this.newGame_btn.Name = "newGame_btn";
+            this.newGame_btn.Size = new System.Drawing.Size(150, 55);
+            this.newGame_btn.TabIndex = 3;
+            this.newGame_btn.Text = "New Game";
+            this.newGame_btn.UseVisualStyleBackColor = false;
+            this.newGame_btn.Click += new System.EventHandler(this.newGame_btn_Click);
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(822, 744);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(150, 55);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "-";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // SharpChess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(984, 811);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.newGame_btn);
             this.Controls.Add(this.currentPiece_lbl);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.boardPanel);
@@ -89,6 +116,8 @@ namespace SharpChess
         private DoubleBuffer boardPanel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label currentPiece_lbl;
+        private System.Windows.Forms.Button newGame_btn;
+        private System.Windows.Forms.Button button1;
     }
 }
 

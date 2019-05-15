@@ -20,5 +20,11 @@ namespace SharpChess.Policy
             else
                 blackMoveHistory.Add(m);
         }
+
+        public void clearLists()
+        {
+            whiteMoveHistory.Clear();
+            blackMoveHistory.Clear();
+        }
     }
 }
