@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpChess.UI
+namespace SharpChess
 {
-    public class DoubleBuffer :System.Windows.Forms.Panel
+    public class DoubleBuffer : System.Windows.Forms.Panel
     {
-        public DoubleBuffer() :base()
+        public DoubleBuffer() : base()
         {
             DoubleBuffered = true;
         }

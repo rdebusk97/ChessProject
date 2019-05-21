@@ -109,8 +109,8 @@ namespace SharpChess
         {
             Graphics graphics = Graphics.FromImage(boardMap);
             int tileSize = (boardPanel.Height / boardSize);
-            int xCoordinate = tileSize * x, yCoordinate = tileSize * y, row = y;
-            if (row % BOARD_COLORS != x % BOARD_COLORS)
+            int xCoordinate = tileSize * x, yCoordinate = tileSize * y;
+            if (y % BOARD_COLORS != x % BOARD_COLORS)
                 graphics.FillRectangle(beigeBrush, xCoordinate, yCoordinate, tileSize, tileSize);
             else
                 graphics.FillRectangle(tanBrush, xCoordinate, yCoordinate, tileSize, tileSize);
@@ -144,6 +144,8 @@ namespace SharpChess
             {
                 Tile oldTile = gameManager.boardManager.findTile(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
                 gameManager.playMove(oldTile.getCurrentPiece(), oldTile, currentTile);
+                printMove();
+                gameManager.newTurn();
                 drawSquare(oldTile.x, oldTile.y);
                 resetPotentialCoordinates();
             }
@@ -188,9 +190,17 @@ namespace SharpChess
         // Displays current tile and piece clicked
         private void displayUpdatedTileLabels(int x, int y)
         {
-            label1.Text = "Tile Coordinate: [" + x.ToString() + "," + y.ToString() + "]";
+            tileCoordinate_lbl.Text = "Tile Coordinate: [" + x.ToString() + "," + y.ToString() + "]";
             currentPiece_lbl.Text = "Piece: " + gameManager.boardManager.findTile(x, y).getCurrentPiece().getAllegiance() + 
                 "_" + gameManager.boardManager.findTile(x, y).getCurrentPiece().toString();
+        }
+
+        private void printMove()
+        {
+            Move lastMove = gameManager.moveManager.getRecentMove(gameManager.getTurn());
+            String appendedText = lastMove.movedPiece.getAllegiance().ToString() + ": " + lastMove.convertCoordinate(lastMove.startTile.x) + (lastMove.startTile.y + 1) + " - " 
+                + lastMove.convertCoordinate(lastMove.endTile.x) + (lastMove.endTile.y + 1) + " [ " + lastMove.movedPiece.toString() +  " ]\n";
+            moveHistory_txtBox.AppendText(appendedText);
         }
 
         #endregion
@@ -243,47 +253,71 @@ namespace SharpChess
             potentialCoordinates.Clear();
         }
 
-        // Tests potential destinations and adds them to the list as deemed legal (this needs to be refactored later on)
         private void testPotentialDestinations(Tile currentTile)
         {
             int x = currentTile.x, y = currentTile.y;
             Piece debatedPiece = currentTile.getCurrentPiece();
-            if (debatedPiece is Pawn)
-                foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
+            switch (debatedPiece.toText())
+            {
+                case 'P':
+                    testPawnCandidacy(currentTile, debatedPiece);
+                    break;
+                case 'K':
+                case 'N':
+                    testSimplexCandidacy(currentTile, debatedPiece);
+                    break;
+                default:
+                    testComplexCandidacy(currentTile, debatedPiece);
+                    break;
+            }
+        }
+
+        private void testPawnCandidacy(Tile currentTile, Piece debatedPiece)
+        {
+            int x = currentTile.x, y = currentTile.y;
+            foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
+            {
+                int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
+                if (gameManager.boardManager.testPotentialPawnDestination(currentTile, newX, newY))
+                    drawPotentialDestinations(newX, newY, currentTile);
+            }
+        }
+
+        private void testSimplexCandidacy(Tile currentTile, Piece debatedPiece)
+        {
+            int x = currentTile.x, y = currentTile.y;
+            foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
+            {
+                int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
+                if (gameManager.boardManager.testPotentialSimplexDestination(debatedPiece, newX, newY))
+                    drawPotentialDestinations(newX, newY, currentTile);
+            }
+        }
+
+        private void testComplexCandidacy(Tile currentTile, Piece debatedPiece)
+        {
+            int x = currentTile.x, y = currentTile.y;
+            foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves()) //More complex moving pieces
+            {
+                bool foundFirstCollision = false;
+                int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
+                while (!foundFirstCollision)
                 {
-                    int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
-                    if (gameManager.boardManager.testPotentialPawnDestination(currentTile, newX, newY))
-                        drawPotentialDestinations(newX, newY, currentTile);
-                }
-            else if (debatedPiece is King || debatedPiece is Knight) //Simple moving pieces (PAWN will be worked with later)
-                foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
-                {
-                    int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
-                    if (gameManager.boardManager.testPotentialSimplexDestination(debatedPiece, newX, newY))
-                        drawPotentialDestinations(newX, newY, currentTile);
-                }
-            else
-                foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves()) //More complex moving pieces
-                {
-                    bool foundFirstCollision = false;
-                    int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
-                    while (!foundFirstCollision)
+                    if (gameManager.boardManager.testPotentialComplexDestination(debatedPiece, newX, newY) == 1)
                     {
-                        if (gameManager.boardManager.testPotentialComplexDestination(debatedPiece, newX, newY) == 1)
-                        {
-                            drawPotentialDestinations(newX, newY, currentTile);
-                            newX += coordinate.Item1;
-                            newY += coordinate.Item2;
-                        }
-                        else if (gameManager.boardManager.testPotentialComplexDestination(debatedPiece, newX, newY) == 0)
-                        {
-                            drawPotentialDestinations(newX, newY, currentTile);
-                            foundFirstCollision = true;
-                        }
-                        else
-                            foundFirstCollision = true;
+                        drawPotentialDestinations(newX, newY, currentTile);
+                        newX += coordinate.Item1;
+                        newY += coordinate.Item2;
                     }
+                    else if (gameManager.boardManager.testPotentialComplexDestination(debatedPiece, newX, newY) == 0)
+                    {
+                        drawPotentialDestinations(newX, newY, currentTile);
+                        foundFirstCollision = true;
+                    }
+                    else
+                        foundFirstCollision = true;
                 }
+            }
         }
 
         #endregion

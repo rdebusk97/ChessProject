@@ -1,4 +1,4 @@
-﻿using SharpChess.UI;
+﻿using SharpChess;
 
 namespace SharpChess
 {
@@ -31,10 +31,12 @@ namespace SharpChess
         private void InitializeComponent()
         {
             this.boardPanel = new DoubleBuffer();
-            this.label1 = new System.Windows.Forms.Label();
+            this.tileCoordinate_lbl = new System.Windows.Forms.Label();
             this.currentPiece_lbl = new System.Windows.Forms.Label();
             this.newGame_btn = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.moveHistory_txtBox = new System.Windows.Forms.RichTextBox();
+            this.moveHistory_lbl = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // boardPanel
@@ -47,23 +49,23 @@ namespace SharpChess
             this.boardPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.boardPanel_Paint);
             this.boardPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.boardPanel_MouseClick);
             // 
-            // label1
+            // tileCoordinate_lbl
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.Control;
-            this.label1.Location = new System.Drawing.Point(748, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(118, 21);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Tile Coordinate:";
+            this.tileCoordinate_lbl.AutoSize = true;
+            this.tileCoordinate_lbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tileCoordinate_lbl.ForeColor = System.Drawing.SystemColors.Control;
+            this.tileCoordinate_lbl.Location = new System.Drawing.Point(340, 744);
+            this.tileCoordinate_lbl.Name = "tileCoordinate_lbl";
+            this.tileCoordinate_lbl.Size = new System.Drawing.Size(118, 21);
+            this.tileCoordinate_lbl.TabIndex = 1;
+            this.tileCoordinate_lbl.Text = "Tile Coordinate:";
             // 
             // currentPiece_lbl
             // 
             this.currentPiece_lbl.AutoSize = true;
             this.currentPiece_lbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.currentPiece_lbl.ForeColor = System.Drawing.SystemColors.Control;
-            this.currentPiece_lbl.Location = new System.Drawing.Point(748, 42);
+            this.currentPiece_lbl.Location = new System.Drawing.Point(340, 778);
             this.currentPiece_lbl.Name = "currentPiece_lbl";
             this.currentPiece_lbl.Size = new System.Drawing.Size(49, 21);
             this.currentPiece_lbl.TabIndex = 2;
@@ -92,16 +94,39 @@ namespace SharpChess
             this.button1.Text = "-";
             this.button1.UseVisualStyleBackColor = true;
             // 
+            // moveHistory_txtBox
+            // 
+            this.moveHistory_txtBox.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.moveHistory_txtBox.Location = new System.Drawing.Point(748, 46);
+            this.moveHistory_txtBox.Name = "moveHistory_txtBox";
+            this.moveHistory_txtBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.moveHistory_txtBox.Size = new System.Drawing.Size(224, 686);
+            this.moveHistory_txtBox.TabIndex = 5;
+            this.moveHistory_txtBox.Text = "";
+            // 
+            // moveHistory_lbl
+            // 
+            this.moveHistory_lbl.AutoSize = true;
+            this.moveHistory_lbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.moveHistory_lbl.ForeColor = System.Drawing.SystemColors.Control;
+            this.moveHistory_lbl.Location = new System.Drawing.Point(744, 12);
+            this.moveHistory_lbl.Name = "moveHistory_lbl";
+            this.moveHistory_lbl.Size = new System.Drawing.Size(106, 21);
+            this.moveHistory_lbl.TabIndex = 6;
+            this.moveHistory_lbl.Text = "Move History:";
+            // 
             // SharpChess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(984, 811);
+            this.Controls.Add(this.moveHistory_lbl);
+            this.Controls.Add(this.moveHistory_txtBox);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.newGame_btn);
             this.Controls.Add(this.currentPiece_lbl);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.tileCoordinate_lbl);
             this.Controls.Add(this.boardPanel);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Name = "SharpChess";
@@ -114,10 +139,12 @@ namespace SharpChess
         #endregion
 
         private DoubleBuffer boardPanel;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label tileCoordinate_lbl;
         private System.Windows.Forms.Label currentPiece_lbl;
         private System.Windows.Forms.Button newGame_btn;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.RichTextBox moveHistory_txtBox;
+        private System.Windows.Forms.Label moveHistory_lbl;
     }
 }
 

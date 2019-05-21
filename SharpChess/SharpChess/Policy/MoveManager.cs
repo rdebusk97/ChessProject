@@ -10,21 +10,22 @@ namespace SharpChess.Policy
 {
     public class MoveManager
     {
-        private List<Move> whiteMoveHistory = new List<Move>();
+        private List<Move> moveHistory = new List<Move>();
         private List<Move> blackMoveHistory = new List<Move>();
 
         public void addToMoveList(Move m)
         {
-            if (m.movedPiece.getAllegiance() == PieceAllegiance.WHITE)
-                whiteMoveHistory.Add(m);
-            else
-                blackMoveHistory.Add(m);
+            moveHistory.Add(m);
         }
 
         public void clearLists()
         {
-            whiteMoveHistory.Clear();
-            blackMoveHistory.Clear();
+            moveHistory.Clear();
+        }
+
+        public Move getRecentMove(PieceAllegiance allegiance)
+        {
+            return moveHistory.Last();
         }
     }
 }
