@@ -197,7 +197,7 @@ namespace SharpChess
 
         private void printMove()
         {
-            Move lastMove = gameManager.moveManager.getRecentMove(gameManager.getTurn());
+            Move lastMove = gameManager.moveManager.getRecentMove();
             String appendedText = lastMove.movedPiece.getAllegiance().ToString() + ": " + lastMove.convertCoordinate(lastMove.startTile.x) + (lastMove.startTile.y + 1) + " - " 
                 + lastMove.convertCoordinate(lastMove.endTile.x) + (lastMove.endTile.y + 1) + " [ " + lastMove.movedPiece.toString() +  " ]\n";
             moveHistory_txtBox.AppendText(appendedText);

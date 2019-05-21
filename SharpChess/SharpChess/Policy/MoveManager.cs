@@ -11,7 +11,6 @@ namespace SharpChess.Policy
     public class MoveManager
     {
         private List<Move> moveHistory = new List<Move>();
-        private List<Move> blackMoveHistory = new List<Move>();
 
         public void addToMoveList(Move m)
         {
@@ -23,7 +22,7 @@ namespace SharpChess.Policy
             moveHistory.Clear();
         }
 
-        public Move getRecentMove(PieceAllegiance allegiance)
+        public Move getRecentMove()
         {
             return moveHistory.Last();
         }

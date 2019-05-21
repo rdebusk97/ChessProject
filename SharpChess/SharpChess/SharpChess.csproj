@@ -56,7 +56,6 @@
     <Compile Include="Data\Pieces\Queen.cs" />
     <Compile Include="Data\Pieces\Rook.cs" />
     <Compile Include="Data\Tile.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MoveState.cs" />
     <Compile Include="Policy\BoardManager.cs" />
     <Compile Include="Policy\GameManager.cs" />
