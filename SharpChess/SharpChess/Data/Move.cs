@@ -14,6 +14,7 @@ namespace SharpChess.Policy
         public Tile endTile { get; private set; }
         public Piece movedPiece { get; private set; }
 
+        // Constructor for a move, with start/end tile and the moved piece
         public Move(Tile startTile, Tile endTile, Piece movedPiece)
         {
             this.startTile = startTile;
@@ -21,6 +22,7 @@ namespace SharpChess.Policy
             this.movedPiece = movedPiece;
         }
 
+        // Converts coordinate notation to letter notation
         public char convertCoordinate(int xValue)
         {
             switch (xValue)

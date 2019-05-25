@@ -145,7 +145,6 @@ namespace SharpChess
                 Tile oldTile = gameManager.boardManager.findTile(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
                 gameManager.playMove(oldTile.getCurrentPiece(), oldTile, currentTile);
                 printMove();
-                gameManager.newTurn();
                 drawSquare(oldTile.x, oldTile.y);
                 resetPotentialCoordinates();
             }
@@ -174,6 +173,7 @@ namespace SharpChess
             e.Graphics.DrawImage(boardMap, 0, 0);
         }
 
+        // Sets a new game
         private void newGame_btn_Click(object sender, EventArgs e)
         {
             gameManager.boardManager.getBoard().resetBoard();
@@ -195,6 +195,7 @@ namespace SharpChess
                 "_" + gameManager.boardManager.findTile(x, y).getCurrentPiece().toString();
         }
 
+        // Prints the move to the history log
         private void printMove()
         {
             Move lastMove = gameManager.moveManager.getRecentMove();
@@ -253,6 +254,7 @@ namespace SharpChess
             potentialCoordinates.Clear();
         }
 
+        // Tests potential destinations given the current tile and piece
         private void testPotentialDestinations(Tile currentTile)
         {
             int x = currentTile.x, y = currentTile.y;
@@ -272,6 +274,7 @@ namespace SharpChess
             }
         }
 
+        // Tests potential destinations for specifically pawns
         private void testPawnCandidacy(Tile currentTile, Piece debatedPiece)
         {
             int x = currentTile.x, y = currentTile.y;
@@ -283,6 +286,7 @@ namespace SharpChess
             }
         }
 
+        // Tests potential destinations for simple pieces (i.e. King or Knight)
         private void testSimplexCandidacy(Tile currentTile, Piece debatedPiece)
         {
             int x = currentTile.x, y = currentTile.y;
@@ -294,6 +298,7 @@ namespace SharpChess
             }
         }
 
+        // Tests potential destinations for complex pieces (Rook, Bishop, Queen)
         private void testComplexCandidacy(Tile currentTile, Piece debatedPiece)
         {
             int x = currentTile.x, y = currentTile.y;

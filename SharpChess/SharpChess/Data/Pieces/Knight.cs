@@ -28,7 +28,7 @@ namespace SharpChess.Data.Pieces
 
         public override string toImage()
         {
-            return "/Resources/" + this.allegiance.ToString() + "_KNIGHT.png";
+            return "/Resources/" + allegiance.ToString() + "_KNIGHT.png";
         }
 
         public override string toString()

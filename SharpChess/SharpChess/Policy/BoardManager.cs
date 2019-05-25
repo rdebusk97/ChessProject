@@ -13,6 +13,7 @@ namespace SharpChess.Policy
         private const int BOARD_SIZE = 8;
         private Board board;
        
+        // Creates an instance of a board
         public BoardManager()
         {
             board = new Board(BOARD_SIZE);

@@ -21,6 +21,7 @@ namespace SharpChess.Data
             instantiateBoard(size);
         }
 
+        // Creates a board (Tile[,] array) of size 'statedSize'
         private void instantiateBoard(int statedSize)
         {
             tileMap = new Tile[statedSize, statedSize];
@@ -30,6 +31,7 @@ namespace SharpChess.Data
             setDefaultPieces();
         }
 
+        // Resets the board to the default pieces
         public void resetBoard()
         {
             foreach (Tile t in tileMap)
@@ -38,11 +40,13 @@ namespace SharpChess.Data
             setDefaultPieces();
         }
 
+        // Returns the size of the board (size will be same height and width)
         public int getBoardSize()
         {
             return boardSize;
         }
 
+        // Default chess pieces on a board
         public void setDefaultPieces()
         {
             tileMap[0, 0].setPiece(new Rook(PieceAllegiance.BLACK));
@@ -75,16 +79,19 @@ namespace SharpChess.Data
             tileMap[5, 6].setPiece(new King(PieceAllegiance.WHITE));*/
         }
 
+        // Retrieves  the 2D tile map
         public Tile[,] getTileMap()
         {
             return tileMap;
         }
 
+        // Sets the selected current tile
         public void setTile(Tile t)
         {
             selectedTile = t;
         }
 
+        // Retrieves the selected tile
         public Tile getTile()
         {
             return selectedTile;

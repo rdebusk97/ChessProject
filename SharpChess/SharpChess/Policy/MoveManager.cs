@@ -12,16 +12,19 @@ namespace SharpChess.Policy
     {
         private List<Move> moveHistory = new List<Move>();
 
+        // Adds a move to the move history
         public void addToMoveList(Move m)
         {
             moveHistory.Add(m);
         }
 
+        // Clear the move list (usually just for starting new games)
         public void clearLists()
         {
             moveHistory.Clear();
         }
 
+        // Retrieves the most recent move (end of the list)
         public Move getRecentMove()
         {
             return moveHistory.Last();

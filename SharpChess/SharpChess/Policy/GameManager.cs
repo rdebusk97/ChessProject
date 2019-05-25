@@ -16,12 +16,14 @@ namespace SharpChess.Policy
         private bool GAME_OVER = false;
         private PieceAllegiance pieceTurn = PieceAllegiance.WHITE;
 
+        // Makes instances of the boardManager and moveManager
         public GameManager()
         {
             boardManager = new BoardManager();
             moveManager = new MoveManager();
         }
 
+        // Resets a game
         public void reset()
         {
             GAME_OVER = false;
@@ -29,6 +31,7 @@ namespace SharpChess.Policy
             moveManager.clearLists();
         }
 
+        // Initiates a move within the game and adds it to the move list for history/tracking
         public void playMove(Piece piece, Tile startTile, Tile endTile)
         {
             endTile.setPiece(piece);
@@ -39,9 +42,11 @@ namespace SharpChess.Policy
                 piece.populateGeneralMoves();
             }
             moveManager.addToMoveList(new Move(startTile, endTile, piece));
+            setNewTurn();
         }
 
-        public void newTurn()
+        // Sets the piece turn to whichever allegiance
+        private void setNewTurn()
         {
             if (pieceTurn == PieceAllegiance.WHITE)
                 pieceTurn = PieceAllegiance.BLACK;
@@ -49,6 +54,7 @@ namespace SharpChess.Policy
                 pieceTurn = PieceAllegiance.WHITE;
         }
 
+        // Gets the allegiance whom which turn it is
         public PieceAllegiance getTurn()
         {
             return pieceTurn;
