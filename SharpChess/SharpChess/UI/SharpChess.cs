@@ -181,6 +181,7 @@ namespace SharpChess
             drawInitialPieces();
             gameManager.reset();
             boardPanel.Refresh();
+            moveHistory_txtBox.Clear();
         }
 
         #endregion
@@ -192,16 +193,14 @@ namespace SharpChess
         {
             tileCoordinate_lbl.Text = "Tile Coordinate: [" + x.ToString() + "," + y.ToString() + "]";
             currentPiece_lbl.Text = "Piece: " + gameManager.boardManager.findTile(x, y).getCurrentPiece().getAllegiance() + 
-                "_" + gameManager.boardManager.findTile(x, y).getCurrentPiece().toString();
+                "_" + gameManager.boardManager.findTile(x, y).getCurrentPiece().ToString();
         }
 
         // Prints the move to the history log
         private void printMove()
         {
             Move lastMove = gameManager.moveManager.getRecentMove();
-            String appendedText = lastMove.movedPiece.getAllegiance().ToString() + ": " + lastMove.convertCoordinate(lastMove.startTile.x) + (lastMove.startTile.y + 1) + " - " 
-                + lastMove.convertCoordinate(lastMove.endTile.x) + (lastMove.endTile.y + 1) + " [ " + lastMove.movedPiece.toString() +  " ]\n";
-            moveHistory_txtBox.AppendText(appendedText);
+            moveHistory_txtBox.AppendText(lastMove.ToString());
         }
 
         #endregion
@@ -257,13 +256,10 @@ namespace SharpChess
         // Tests potential destinations given the current tile and piece
         private void testPotentialDestinations(Tile currentTile)
         {
-            int x = currentTile.x, y = currentTile.y;
             Piece debatedPiece = currentTile.getCurrentPiece();
             switch (debatedPiece.toText())
             {
                 case 'P':
-                    testPawnCandidacy(currentTile, debatedPiece);
-                    break;
                 case 'K':
                 case 'N':
                     testSimplexCandidacy(currentTile, debatedPiece);
@@ -274,28 +270,23 @@ namespace SharpChess
             }
         }
 
-        // Tests potential destinations for specifically pawns
-        private void testPawnCandidacy(Tile currentTile, Piece debatedPiece)
-        {
-            int x = currentTile.x, y = currentTile.y;
-            foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
-            {
-                int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
-                if (gameManager.boardManager.testPotentialPawnDestination(currentTile, newX, newY))
-                    drawPotentialDestinations(newX, newY, currentTile);
-            }
-        }
-
-        // Tests potential destinations for simple pieces (i.e. King or Knight)
+        // Tests potential destinations for simple pieces (i.e. Pawn, King, Knight)
         private void testSimplexCandidacy(Tile currentTile, Piece debatedPiece)
         {
             int x = currentTile.x, y = currentTile.y;
             foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
             {
                 int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
-                if (gameManager.boardManager.testPotentialSimplexDestination(debatedPiece, newX, newY))
-                    drawPotentialDestinations(newX, newY, currentTile);
+                if (debatedPiece.toText() == 'P')
+                {
+                    if (gameManager.boardManager.testPotentialPawnDestination(currentTile, newX, newY))
+                        drawPotentialDestinations(newX, newY, currentTile);
+                }
+                else
+                    if (gameManager.boardManager.testPotentialSimplexDestination(debatedPiece, newX, newY))
+                        drawPotentialDestinations(newX, newY, currentTile);
             }
+
         }
 
         // Tests potential destinations for complex pieces (Rook, Bishop, Queen)

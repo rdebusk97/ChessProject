@@ -28,7 +28,7 @@ namespace SharpChess.Policy
         {
             GAME_OVER = false;
             pieceTurn = PieceAllegiance.WHITE;
-            moveManager.clearLists();
+            moveManager.clearList();
         }
 
         // Initiates a move within the game and adds it to the move list for history/tracking

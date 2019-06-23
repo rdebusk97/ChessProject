@@ -26,7 +26,7 @@ namespace SharpChess.Data.Pieces
             return 'K';
         }
 
-        public override string toString()
+        public override string ToString()
         {
             return "KING";
         }
@@ -42,6 +42,11 @@ namespace SharpChess.Data.Pieces
             listOfGeneralMoves.Add(Tuple.Create(0, 1));
             listOfGeneralMoves.Add(Tuple.Create(1, 1));
             return listOfGeneralMoves;
+        }
+
+        public override int toValue()
+        {
+            return 10;
         }
     }
 }

@@ -18,8 +18,8 @@ namespace SharpChess.Policy
             moveHistory.Add(m);
         }
 
-        // Clear the move list (usually just for starting new games)
-        public void clearLists()
+        // Clears move history
+        public void clearList()
         {
             moveHistory.Clear();
         }

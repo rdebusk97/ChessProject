@@ -10,6 +10,8 @@ namespace SharpChess.Policy
 {
     public class Move
     {
+        private const int ASCII_VAL = 65;
+
         public Tile startTile { get; private set; }
         public Tile endTile { get; private set; }
         public Piece movedPiece { get; private set; }
@@ -25,25 +27,13 @@ namespace SharpChess.Policy
         // Converts coordinate notation to letter notation
         public char convertCoordinate(int xValue)
         {
-            switch (xValue)
-            {
-                case 0:
-                    return 'A';
-                case 1:
-                    return 'B';
-                case 2:
-                    return 'C';
-                case 3:
-                    return 'D';
-                case 4:
-                    return 'E';
-                case 5:
-                    return 'F';
-                case 6:
-                    return 'G';
-                default:
-                    return 'A';
-            }
+            return Convert.ToChar((ASCII_VAL + xValue));
+        }
+
+        public string ToString()
+        {
+            return movedPiece.getAllegiance().ToString() + ": " + convertCoordinate(startTile.x) + (startTile.y + 1) + " - "
+                + convertCoordinate(endTile.x) + (endTile.y + 1) + " [ " + movedPiece.ToString() + " ]\n";
         }
     }
 }

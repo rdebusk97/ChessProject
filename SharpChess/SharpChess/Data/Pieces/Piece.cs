@@ -38,7 +38,7 @@ namespace SharpChess.Data.Pieces
 
         public abstract List<Tuple<int, int>> populateGeneralMoves();
         public abstract char toText();
-        public abstract string toString();
         public abstract string toImage();
+        public abstract int toValue();
     }
 }

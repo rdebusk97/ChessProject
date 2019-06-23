@@ -27,7 +27,7 @@ namespace SharpChess.Data.Pieces
             return "/Resources/" + this.allegiance.ToString() + "_BISHOP.png";
         }
 
-        public override string toString()
+        public override string ToString()
         {
             return "BISHOP";
         }
@@ -35,6 +35,11 @@ namespace SharpChess.Data.Pieces
         public override char toText()
         {
             return 'B';
+        }
+
+        public override int toValue()
+        {
+            return 3; 
         }
     }
 }

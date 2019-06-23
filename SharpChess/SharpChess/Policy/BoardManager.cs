@@ -11,6 +11,7 @@ namespace SharpChess.Policy
     public class BoardManager
     {
         private const int BOARD_SIZE = 8;
+        private const int DOUBLE_MOVE = 2;
         private Board board;
        
         // Creates an instance of a board
@@ -57,7 +58,7 @@ namespace SharpChess.Policy
             Piece debatedPiece = currentTile.getCurrentPiece();
             if (findTile(newX, newY) != null)
             {
-                if (Math.Abs(currentTile.y - newY) == 2 && findTile(newX, (currentTile.y + newY) / 2).hasPlacedPiece())
+                if (Math.Abs(currentTile.y - newY) == DOUBLE_MOVE && findTile(newX, (currentTile.y + newY) / DOUBLE_MOVE).hasPlacedPiece())
                     return false;
                 else if ((currentTile.x - newX == 0) && !findTile(newX, newY).hasPlacedPiece())
                     return true;
