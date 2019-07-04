@@ -45,6 +45,15 @@ namespace SharpChess.Policy
             setNewTurn();
         }
 
+        public Tuple<int, int> testCheck(List<Tuple<int, int>> potentialCoordinates)
+        {
+            Tuple<int, int> kingCheckCoordinate = boardManager.getKingCoordinate(getAntiTurn());
+            foreach (Tuple<int, int> coordinate in potentialCoordinates)
+                if (coordinate.Item1 == kingCheckCoordinate.Item1 && coordinate.Item2 == kingCheckCoordinate.Item2)
+                    return coordinate;
+            return null;
+        }
+
         // Sets the piece turn to whichever allegiance
         private void setNewTurn()
         {
@@ -58,6 +67,14 @@ namespace SharpChess.Policy
         public PieceAllegiance getTurn()
         {
             return pieceTurn;
+        }
+
+        public PieceAllegiance getAntiTurn()
+        {
+            if (pieceTurn == PieceAllegiance.WHITE)
+                return PieceAllegiance.BLACK;
+            else
+                return PieceAllegiance.WHITE;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace SharpChess.Policy
             return Convert.ToChar((ASCII_VAL + xValue));
         }
 
-        public string ToString()
+        public override string ToString()
         {
             return movedPiece.getAllegiance().ToString() + ": " + convertCoordinate(startTile.x) + (startTile.y + 1) + " - "
                 + convertCoordinate(endTile.x) + (endTile.y + 1) + " [ " + movedPiece.ToString() + " ]\n";

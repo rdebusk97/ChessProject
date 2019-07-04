@@ -18,7 +18,6 @@ namespace SharpChess
     {
         private const int BOARD_COLORS = 2;
         private const int DEBUG_DIRECTORY_OFFSET = 10;
-        private MoveState moveState = MoveState.NO_SELECTION;
 
         // Should probably find a better way to get to the directory than this, but it's a work-around...
         private string imagesDirectory = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName
@@ -28,6 +27,7 @@ namespace SharpChess
         private List<Tuple<int, int>> potentialCoordinates = new List<Tuple<int, int>>();
 
         private int boardSize;
+        private MoveState moveState = MoveState.NO_SELECTION;
 
         private SolidBrush tanBrush = new SolidBrush(Color.Tan);
         private SolidBrush beigeBrush = new SolidBrush(Color.Beige);
@@ -68,14 +68,6 @@ namespace SharpChess
             }
             tempGraphics.DrawImage(tempBitMap, 0, 0);
             return tempBitMap;
-        }
-
-        // Draws any initial pieces that were placed on the board at startup
-        private void drawInitialPieces()
-        {
-            foreach (Tile t in gameManager.boardManager.getBoard().getTileMap())
-                if (t.hasPlacedPiece())
-                    drawPiece(t.getCurrentPiece(), t.x, t.y);
         }
 
         // Draws a piece onto the board given an x and y coordinate
@@ -147,6 +139,13 @@ namespace SharpChess
                 printMove();
                 drawSquare(oldTile.x, oldTile.y);
                 resetPotentialCoordinates();
+                moveState = MoveState.NO_SELECTION;
+                testPotentialDestinations(currentTile);
+                /*moveHistory_txtBox.AppendText("Potential coordinates:"); //
+                foreach (Tuple<int, int> coordinate in potentialCoordinates)
+                {
+                    moveHistory_txtBox.AppendText("[" + coordinate.Item1 + "," + coordinate.Item2 + "]");
+                }//*/
             }
             else if (currentTile.hasPlacedPiece())
             {
@@ -157,14 +156,6 @@ namespace SharpChess
                 displayUpdatedTileLabels(x, y);
             }
             boardPanel.Refresh();
-        }
-
-        private bool checkPotentialDestinationList(int x, int y)
-        {
-            foreach (Tuple<int, int> coordinate in potentialCoordinates)
-                if (coordinate.Item1 == x && coordinate.Item2 == y)
-                    return true;
-            return false;
         }
 
         // Paints new board
@@ -207,15 +198,12 @@ namespace SharpChess
 
         #region -- Helper Methods
 
-        // Checks for legal coordinate and will draw the bordered coordinate
-        private void drawPotentialDestinations(int newX, int newY, Tile currentTile)
+        // Draws any initial pieces that were placed on the board at startup
+        private void drawInitialPieces()
         {
-            if (0 <= newX && newX < boardSize && 0 <= newY && newY < boardSize) //Legal spot on board
-            {
-                drawBorder(newX, newY);
-                potentialCoordinates.Add(Tuple.Create(newX, newY));
-                boardPanel.Refresh();
-            }
+            foreach (Tile t in gameManager.boardManager.getBoard().getTileMap())
+                if (t.hasPlacedPiece())
+                    drawPiece(t.getCurrentPiece(), t.x, t.y);
         }
 
         // Displays new bordered coordinate and its potential moves
@@ -227,8 +215,8 @@ namespace SharpChess
             drawBorder(currentTile.x, currentTile.y);
             currentCoordinateClicked = Tuple.Create(currentTile.x, currentTile.y);
             gameManager.boardManager.getBoard().setTile(currentTile);
+            moveState = MoveState.SELECTED_START;
             testPotentialDestinations(currentTile);
-            moveState = MoveState.SELECTED_START; //move states will become important later on
         }
 
         // Undisplays current coordinate and opens new one
@@ -242,41 +230,18 @@ namespace SharpChess
             moveState = MoveState.NO_SELECTION;
         }
 
-        // Resets potential coordinates
-        private void resetPotentialCoordinates()
-        {
-            foreach (Tuple<int, int> coordinate in potentialCoordinates)
-            {
-                drawSquare(coordinate.Item1, coordinate.Item2);
-                drawBackPlacedPiece(coordinate.Item1, coordinate.Item2);
-            }
-            potentialCoordinates.Clear();
-        }
+        
 
-        // Tests potential destinations given the current tile and piece
-        private void testPotentialDestinations(Tile currentTile)
-        {
-            Piece debatedPiece = currentTile.getCurrentPiece();
-            switch (debatedPiece.toText())
-            {
-                case 'P':
-                case 'K':
-                case 'N':
-                    testSimplexCandidacy(currentTile, debatedPiece);
-                    break;
-                default:
-                    testComplexCandidacy(currentTile, debatedPiece);
-                    break;
-            }
-        }
+        #endregion
+
+        #region -- Move Candidacy
 
         // Tests potential destinations for simple pieces (i.e. Pawn, King, Knight)
         private void testSimplexCandidacy(Tile currentTile, Piece debatedPiece)
         {
-            int x = currentTile.x, y = currentTile.y;
             foreach (Tuple<int, int> coordinate in debatedPiece.getListOfGeneralMoves())
             {
-                int newX = x + coordinate.Item1, newY = y + coordinate.Item2;
+                int newX = currentTile.x + coordinate.Item1, newY = currentTile.y + coordinate.Item2;
                 if (debatedPiece.toText() == 'P')
                 {
                     if (gameManager.boardManager.testPotentialPawnDestination(currentTile, newX, newY))
@@ -316,6 +281,66 @@ namespace SharpChess
             }
         }
 
+        // Checks for legal coordinate and will draw the bordered coordinate
+        private void drawPotentialDestinations(int newX, int newY, Tile currentTile)
+        {
+            if (0 <= newX && newX < boardSize && 0 <= newY && newY < boardSize) //Legal spot on board
+            {
+                potentialCoordinates.Add(Tuple.Create(newX, newY));
+                if (moveState == MoveState.SELECTED_START) //
+                    drawBorder(newX, newY);
+                else
+                    testCheck();
+                boardPanel.Refresh();
+            }
+        }
+
+        // Resets potential coordinates
+        private void resetPotentialCoordinates()
+        {
+            foreach (Tuple<int, int> coordinate in potentialCoordinates)
+            {
+                drawSquare(coordinate.Item1, coordinate.Item2);
+                drawBackPlacedPiece(coordinate.Item1, coordinate.Item2);
+            }
+            potentialCoordinates.Clear();
+        }
+
+        private bool checkPotentialDestinationList(int x, int y)
+        {
+            foreach (Tuple<int, int> coordinate in potentialCoordinates)
+                if (coordinate.Item1 == x && coordinate.Item2 == y)
+                    return true;
+            return false;
+        }
+
+        // Tests potential destinations given the current tile and piece
+        private void testPotentialDestinations(Tile currentTile)
+        {
+            Piece debatedPiece = currentTile.getCurrentPiece();
+            switch (debatedPiece.toText())
+            {
+                case 'P':
+                case 'K':
+                case 'N':
+                    testSimplexCandidacy(currentTile, debatedPiece);
+                    break;
+                default:
+                    testComplexCandidacy(currentTile, debatedPiece);
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region -- Endgame 
+
+        private void testCheck() //move to gameManager
+        {
+            Tuple<int, int> checkCoordinate = gameManager.testCheck(potentialCoordinates);
+            if (checkCoordinate != null)
+                drawBorder(checkCoordinate.Item1, checkCoordinate.Item2);
+        }
         #endregion
     }
 }

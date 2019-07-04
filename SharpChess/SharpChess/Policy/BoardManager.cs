@@ -50,6 +50,14 @@ namespace SharpChess.Policy
                 return null;
         }
 
+        public Tuple<int, int> getKingCoordinate(PieceAllegiance allegiance)
+        {
+            foreach (Tile t in board.getTileMap())
+                if (t.getCurrentPiece() is King && allegiance == t.getCurrentPiece().getAllegiance())
+                    return Tuple.Create(t.x, t.y);
+            return null;
+        }
+
         #region -- Destination Candidacy
 
         // Used for testing pawn piece destinations
