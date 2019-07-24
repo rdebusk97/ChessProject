@@ -147,7 +147,7 @@ namespace SharpChess
                     moveHistory_txtBox.AppendText("[" + coordinate.Item1 + "," + coordinate.Item2 + "]");
                 }//*/
             }
-            else if (currentTile.hasPlacedPiece())
+            else if (currentTile.hasPlacedPiece() && currentTile.getCurrentPiece().getAllegiance() == gameManager.getTurn()) // Remove second condition to allow free piece movement
             {
                 if (x != currentCoordinateClicked.Item1 || y != currentCoordinateClicked.Item2)
                     newlyClickedCoordinate(currentTile);
@@ -229,8 +229,6 @@ namespace SharpChess
             gameManager.boardManager.getBoard().setTile(null);
             moveState = MoveState.NO_SELECTION;
         }
-
-        
 
         #endregion
 
@@ -342,5 +340,15 @@ namespace SharpChess
                 drawBorder(checkCoordinate.Item1, checkCoordinate.Item2);
         }
         #endregion
+
+        private void turnbased_radioBtn_CheckedChanged(object sender, EventArgs e)
+        {
+            freePlay_radioBtn.Checked = false;
+        }
+
+        private void freePlay_radioBtn_CheckedChanged(object sender, EventArgs e)
+        {
+            turnbased_radioBtn.Checked = false;
+        }
     }
 }

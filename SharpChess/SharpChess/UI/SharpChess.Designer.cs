@@ -37,6 +37,8 @@ namespace SharpChess
             this.button1 = new System.Windows.Forms.Button();
             this.moveHistory_txtBox = new System.Windows.Forms.RichTextBox();
             this.moveHistory_lbl = new System.Windows.Forms.Label();
+            this.turnbased_radioBtn = new System.Windows.Forms.RadioButton();
+            this.freePlay_radioBtn = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // boardPanel
@@ -115,12 +117,45 @@ namespace SharpChess
             this.moveHistory_lbl.TabIndex = 6;
             this.moveHistory_lbl.Text = "Move History:";
             // 
+            // turnbased_radioBtn
+            // 
+            this.turnbased_radioBtn.AutoSize = true;
+            this.turnbased_radioBtn.BackColor = System.Drawing.Color.Transparent;
+            this.turnbased_radioBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.turnbased_radioBtn.ForeColor = System.Drawing.SystemColors.Control;
+            this.turnbased_radioBtn.Location = new System.Drawing.Point(181, 744);
+            this.turnbased_radioBtn.Name = "turnbased_radioBtn";
+            this.turnbased_radioBtn.Size = new System.Drawing.Size(107, 25);
+            this.turnbased_radioBtn.TabIndex = 7;
+            this.turnbased_radioBtn.TabStop = true;
+            this.turnbased_radioBtn.Text = "Turn-Based";
+            this.turnbased_radioBtn.UseVisualStyleBackColor = false;
+            this.turnbased_radioBtn.Checked = true;
+            this.turnbased_radioBtn.CheckedChanged += new System.EventHandler(this.turnbased_radioBtn_CheckedChanged);
+            // 
+            // freePlay_radioBtn
+            // 
+            this.freePlay_radioBtn.AutoSize = true;
+            this.freePlay_radioBtn.BackColor = System.Drawing.Color.Transparent;
+            this.freePlay_radioBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.freePlay_radioBtn.ForeColor = System.Drawing.SystemColors.Control;
+            this.freePlay_radioBtn.Location = new System.Drawing.Point(181, 774);
+            this.freePlay_radioBtn.Name = "freePlay_radioBtn";
+            this.freePlay_radioBtn.Size = new System.Drawing.Size(91, 25);
+            this.freePlay_radioBtn.TabIndex = 8;
+            this.freePlay_radioBtn.TabStop = true;
+            this.freePlay_radioBtn.Text = "Free Play";
+            this.freePlay_radioBtn.UseVisualStyleBackColor = false;
+            this.freePlay_radioBtn.CheckedChanged += new System.EventHandler(this.freePlay_radioBtn_CheckedChanged);
+            // 
             // SharpChess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(984, 811);
+            this.Controls.Add(this.freePlay_radioBtn);
+            this.Controls.Add(this.turnbased_radioBtn);
             this.Controls.Add(this.moveHistory_lbl);
             this.Controls.Add(this.moveHistory_txtBox);
             this.Controls.Add(this.button1);
@@ -129,6 +164,8 @@ namespace SharpChess
             this.Controls.Add(this.tileCoordinate_lbl);
             this.Controls.Add(this.boardPanel);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.MaximumSize = new System.Drawing.Size(1000, 850);
+            this.MinimumSize = new System.Drawing.Size(1000, 850);
             this.Name = "SharpChess";
             this.Text = "SharpChess";
             this.ResumeLayout(false);
@@ -145,6 +182,8 @@ namespace SharpChess
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.RichTextBox moveHistory_txtBox;
         private System.Windows.Forms.Label moveHistory_lbl;
+        private System.Windows.Forms.RadioButton turnbased_radioBtn;
+        private System.Windows.Forms.RadioButton freePlay_radioBtn;
     }
 }
 

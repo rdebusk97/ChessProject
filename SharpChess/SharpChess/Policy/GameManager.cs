@@ -47,7 +47,7 @@ namespace SharpChess.Policy
 
         public Tuple<int, int> testCheck(List<Tuple<int, int>> potentialCoordinates)
         {
-            Tuple<int, int> kingCheckCoordinate = boardManager.getKingCoordinate(getAntiTurn());
+            Tuple<int, int> kingCheckCoordinate = boardManager.getKingCoordinate(getTurn());
             foreach (Tuple<int, int> coordinate in potentialCoordinates)
                 if (coordinate.Item1 == kingCheckCoordinate.Item1 && coordinate.Item2 == kingCheckCoordinate.Item2)
                     return coordinate;
