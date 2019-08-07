@@ -49,8 +49,9 @@ namespace SharpChess.Policy
         {
             Tuple<int, int> kingCheckCoordinate = boardManager.getKingCoordinate(getTurn());
             foreach (Tuple<int, int> coordinate in potentialCoordinates)
-                if (coordinate.Item1 == kingCheckCoordinate.Item1 && coordinate.Item2 == kingCheckCoordinate.Item2)
-                    return coordinate;
+                if (kingCheckCoordinate != null)
+                    if (coordinate.Item1 == kingCheckCoordinate.Item1 && coordinate.Item2 == kingCheckCoordinate.Item2)
+                        return coordinate;
             return null;
         }
 

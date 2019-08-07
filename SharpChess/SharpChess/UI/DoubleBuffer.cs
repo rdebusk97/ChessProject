@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpChess
+namespace SharpChess.UI
 {
     public class DoubleBuffer : System.Windows.Forms.Panel
     {
