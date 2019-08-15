@@ -1,5 +1,4 @@
-﻿using SharpChess;
-using SharpChess.UI;
+﻿using SharpChess.UI;
 
 namespace SharpChess
 {
@@ -39,10 +38,9 @@ namespace SharpChess
             this.moveHistory_lbl = new System.Windows.Forms.Label();
             this.turnbased_radioBtn = new System.Windows.Forms.RadioButton();
             this.freePlay_radioBtn = new System.Windows.Forms.RadioButton();
-            this.boardPanel = new UI.DoubleBuffer();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.blackteam_lbl = new System.Windows.Forms.Label();
-            this.whiteteam_lbl = new System.Windows.Forms.Label();
+            this.undo_btn = new System.Windows.Forms.Button();
+            this.boardPanel = new UI.DoubleBuffer();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -73,9 +71,9 @@ namespace SharpChess
             this.newGame_btn.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.newGame_btn.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.newGame_btn.ForeColor = System.Drawing.SystemColors.Control;
-            this.newGame_btn.Location = new System.Drawing.Point(12, 48);
+            this.newGame_btn.Location = new System.Drawing.Point(12, 73);
             this.newGame_btn.Name = "newGame_btn";
-            this.newGame_btn.Size = new System.Drawing.Size(150, 55);
+            this.newGame_btn.Size = new System.Drawing.Size(137, 43);
             this.newGame_btn.TabIndex = 3;
             this.newGame_btn.Text = "New Game";
             this.newGame_btn.UseVisualStyleBackColor = false;
@@ -94,10 +92,10 @@ namespace SharpChess
             // moveHistory_txtBox
             // 
             this.moveHistory_txtBox.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.moveHistory_txtBox.Location = new System.Drawing.Point(745, 36);
+            this.moveHistory_txtBox.Location = new System.Drawing.Point(671, 36);
             this.moveHistory_txtBox.Name = "moveHistory_txtBox";
             this.moveHistory_txtBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.moveHistory_txtBox.Size = new System.Drawing.Size(224, 616);
+            this.moveHistory_txtBox.Size = new System.Drawing.Size(200, 560);
             this.moveHistory_txtBox.TabIndex = 5;
             this.moveHistory_txtBox.Text = "";
             // 
@@ -106,7 +104,7 @@ namespace SharpChess
             this.moveHistory_lbl.AutoSize = true;
             this.moveHistory_lbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.moveHistory_lbl.ForeColor = System.Drawing.SystemColors.Control;
-            this.moveHistory_lbl.Location = new System.Drawing.Point(741, 9);
+            this.moveHistory_lbl.Location = new System.Drawing.Point(667, 9);
             this.moveHistory_lbl.Name = "moveHistory_lbl";
             this.moveHistory_lbl.Size = new System.Drawing.Size(106, 21);
             this.moveHistory_lbl.TabIndex = 6;
@@ -119,7 +117,7 @@ namespace SharpChess
             this.turnbased_radioBtn.Checked = true;
             this.turnbased_radioBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.turnbased_radioBtn.ForeColor = System.Drawing.SystemColors.Control;
-            this.turnbased_radioBtn.Location = new System.Drawing.Point(514, 32);
+            this.turnbased_radioBtn.Location = new System.Drawing.Point(179, 32);
             this.turnbased_radioBtn.Name = "turnbased_radioBtn";
             this.turnbased_radioBtn.Size = new System.Drawing.Size(107, 25);
             this.turnbased_radioBtn.TabIndex = 7;
@@ -134,7 +132,7 @@ namespace SharpChess
             this.freePlay_radioBtn.BackColor = System.Drawing.Color.Transparent;
             this.freePlay_radioBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.freePlay_radioBtn.ForeColor = System.Drawing.SystemColors.Control;
-            this.freePlay_radioBtn.Location = new System.Drawing.Point(514, 65);
+            this.freePlay_radioBtn.Location = new System.Drawing.Point(179, 63);
             this.freePlay_radioBtn.Name = "freePlay_radioBtn";
             this.freePlay_radioBtn.Size = new System.Drawing.Size(91, 25);
             this.freePlay_radioBtn.TabIndex = 8;
@@ -142,6 +140,32 @@ namespace SharpChess
             this.freePlay_radioBtn.Text = "Free Play";
             this.freePlay_radioBtn.UseVisualStyleBackColor = false;
             this.freePlay_radioBtn.CheckedChanged += new System.EventHandler(this.freePlay_radioBtn_CheckedChanged);
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.newGame_btn);
+            this.panel1.Controls.Add(this.freePlay_radioBtn);
+            this.panel1.Controls.Add(this.turnbased_radioBtn);
+            this.panel1.Location = new System.Drawing.Point(12, 668);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(640, 131);
+            this.panel1.TabIndex = 9;
+            // 
+            // undo_btn
+            // 
+            this.undo_btn.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.undo_btn.Enabled = false;
+            this.undo_btn.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.undo_btn.ForeColor = System.Drawing.SystemColors.Control;
+            this.undo_btn.Location = new System.Drawing.Point(671, 609);
+            this.undo_btn.Name = "undo_btn";
+            this.undo_btn.Size = new System.Drawing.Size(102, 43);
+            this.undo_btn.TabIndex = 10;
+            this.undo_btn.Text = "Undo";
+            this.undo_btn.UseVisualStyleBackColor = false;
+            this.undo_btn.Click += new System.EventHandler(this.undo_btn_Click);
             // 
             // boardPanel
             // 
@@ -154,48 +178,13 @@ namespace SharpChess
             this.boardPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.boardPanel_Paint);
             this.boardPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.boardPanel_MouseClick);
             // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.newGame_btn);
-            this.panel1.Controls.Add(this.freePlay_radioBtn);
-            this.panel1.Controls.Add(this.turnbased_radioBtn);
-            this.panel1.Location = new System.Drawing.Point(12, 685);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(640, 114);
-            this.panel1.TabIndex = 9;
-            // 
-            // blackteam_lbl
-            // 
-            this.blackteam_lbl.AutoSize = true;
-            this.blackteam_lbl.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.blackteam_lbl.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.blackteam_lbl.Location = new System.Drawing.Point(658, 72);
-            this.blackteam_lbl.Name = "blackteam_lbl";
-            this.blackteam_lbl.Size = new System.Drawing.Size(79, 30);
-            this.blackteam_lbl.TabIndex = 10;
-            this.blackteam_lbl.Text = "BLACK";
-            // 
-            // whiteteam_lbl
-            // 
-            this.whiteteam_lbl.AutoSize = true;
-            this.whiteteam_lbl.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.whiteteam_lbl.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.whiteteam_lbl.Location = new System.Drawing.Point(658, 557);
-            this.whiteteam_lbl.Name = "whiteteam_lbl";
-            this.whiteteam_lbl.Size = new System.Drawing.Size(80, 30);
-            this.whiteteam_lbl.TabIndex = 11;
-            this.whiteteam_lbl.Text = "WHITE";
-            // 
             // SharpChess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(984, 811);
-            this.Controls.Add(this.whiteteam_lbl);
-            this.Controls.Add(this.blackteam_lbl);
+            this.Controls.Add(this.undo_btn);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.moveHistory_lbl);
             this.Controls.Add(this.tileCoordinate_lbl);
@@ -227,8 +216,7 @@ namespace SharpChess
         private System.Windows.Forms.RadioButton turnbased_radioBtn;
         private System.Windows.Forms.RadioButton freePlay_radioBtn;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label blackteam_lbl;
-        private System.Windows.Forms.Label whiteteam_lbl;
+        private System.Windows.Forms.Button undo_btn;
     }
 }
 

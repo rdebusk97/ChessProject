@@ -15,13 +15,15 @@ namespace SharpChess.Policy
         public Tile startTile { get; private set; }
         public Tile endTile { get; private set; }
         public Piece movedPiece { get; private set; }
+        public Piece capturedPiece { get; private set; }
 
-        // Constructor for a move, with start/end tile and the moved piece
-        public Move(Tile startTile, Tile endTile, Piece movedPiece)
+        // Constructor for a move, with start/end tile, moved piece, and potential captured piece
+        public Move(Tile startTile, Tile endTile, Piece movedPiece, Piece capturedPiece)
         {
             this.startTile = startTile;
             this.endTile = endTile;
             this.movedPiece = movedPiece;
+            this.capturedPiece = capturedPiece;
         }
 
         // Converts coordinate notation to letter notation
@@ -30,10 +32,10 @@ namespace SharpChess.Policy
             return Convert.ToChar((ASCII_VAL + xValue));
         }
 
-        public override string ToString()
+        public override string ToString() //TODO: to be edited for algebraic notation later
         {
             return movedPiece.getAllegiance().ToString() + ": " + convertCoordinate(startTile.x) + (startTile.y + 1) + " - "
-                + convertCoordinate(endTile.x) + (endTile.y + 1) + " [ " + movedPiece.ToString() + " ]\n";
+                + convertCoordinate(endTile.x) + (endTile.y + 1) + " [ " + movedPiece.ToString() + " ]";
         }
     }
 }

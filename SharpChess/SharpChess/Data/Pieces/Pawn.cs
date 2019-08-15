@@ -33,7 +33,7 @@ namespace SharpChess.Data.Pieces
             listOfGeneralMoves.Clear();
             int allegianceDirection = getAllegianceValue();
             listOfGeneralMoves.Add(Tuple.Create(0, allegianceDirection));
-            if (!hasPlayedFirstMove())
+            if (getMovesPlayed() == 0)
                 listOfGeneralMoves.Add(Tuple.Create(0, allegianceDirection * 2));
             listOfGeneralMoves.Add(Tuple.Create(-1, allegianceDirection));
             listOfGeneralMoves.Add(Tuple.Create(1, allegianceDirection));

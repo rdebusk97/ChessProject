@@ -14,6 +14,7 @@ namespace SharpChess.Policy
         public MoveManager moveManager { get; private set; }
 
         private bool GAME_OVER = false;
+        private int movesPlayed = 0;
         private PieceAllegiance pieceTurn = PieceAllegiance.WHITE;
 
         // Makes instances of the boardManager and moveManager
@@ -29,19 +30,32 @@ namespace SharpChess.Policy
             GAME_OVER = false;
             pieceTurn = PieceAllegiance.WHITE;
             moveManager.clearList();
+            movesPlayed = 0;
         }
 
-        // Initiates a move within the game and adds it to the move list for history/tracking
-        public void playMove(Piece piece, Tile startTile, Tile endTile)
+        public void executeMove(Piece piece, Tile startTile, Tile endTile)
         {
-            endTile.setPiece(piece);
-            startTile.removePiece();
-            if (!piece.hasPlayedFirstMove())
-            {
-                piece.setMovedTrue();
+            Piece capturedPiece = null;
+            if (endTile.getCurrentPiece() != null)
+                capturedPiece = endTile.getCurrentPiece();
+            Move m = new Move(startTile, endTile, piece, capturedPiece);
+            moveManager.executeMove(m);
+            movesPlayed++;
+            nextTurnSetup(piece);
+        }
+
+        public void unexecuteMove()
+        {
+            Move m = moveManager.getRecentMove();
+            moveManager.unexecuteMove();
+            movesPlayed--;
+            nextTurnSetup(m.movedPiece);
+        }
+
+        private void nextTurnSetup(Piece piece)
+        {
+            if (piece.getMovesPlayed() <= 1)
                 piece.populateGeneralMoves();
-            }
-            moveManager.addToMoveList(new Move(startTile, endTile, piece));
             setNewTurn();
         }
 
@@ -70,12 +84,10 @@ namespace SharpChess.Policy
             return pieceTurn;
         }
 
-        public PieceAllegiance getAntiTurn()
+        //Gets moves played in game thus far
+        public int getMovesPlayed()
         {
-            if (pieceTurn == PieceAllegiance.WHITE)
-                return PieceAllegiance.BLACK;
-            else
-                return PieceAllegiance.WHITE;
+            return movesPlayed;
         }
     }
 }

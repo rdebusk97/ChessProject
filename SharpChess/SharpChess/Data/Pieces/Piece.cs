@@ -10,7 +10,7 @@ namespace SharpChess.Data.Pieces
     public abstract class Piece
     {
         protected PieceAllegiance allegiance;
-        protected bool hasPlayedMove;
+        protected int movesPlayed;
         protected List<Tuple<int, int>> listOfGeneralMoves = new List<Tuple<int, int>>();
 
         // Constructor for a piece
@@ -18,19 +18,25 @@ namespace SharpChess.Data.Pieces
         {
             this.allegiance = allegiance;
             populateGeneralMoves();
-            hasPlayedMove = false;
+            movesPlayed = 0;
         }
 
-        // Checks to see if a piece has moved at least once
-        public bool hasPlayedFirstMove()
+        // If move is played, move count incremented
+        public void doneMove()
         {
-            return hasPlayedMove;
+            movesPlayed++;
         }
 
-        // Sets the variable to note the piece has moved at least once
-        public void setMovedTrue()
+        // If move undone, move count decremented
+        public void undoneMove()
         {
-            hasPlayedMove = true;
+            movesPlayed--;
+        }
+
+        // Returns how many times the piece has moved (noted for pawns/castling)
+        public int getMovesPlayed()
+        {
+            return movesPlayed;
         }
 
         public PieceAllegiance getAllegiance() => allegiance;

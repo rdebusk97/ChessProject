@@ -136,7 +136,7 @@ namespace SharpChess
             if (moveState == MoveState.SELECTED_START && checkPotentialDestinationList(x, y))
             {
                 Tile oldTile = gameManager.boardManager.findTile(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
-                executeMove(oldTile, currentTile);
+                playMove(oldTile, currentTile, currentTile.getCurrentPiece(), false);
                 printMove();
             }
             else if (currentTile.hasPlacedPiece() && currentTile.getCurrentPiece().getAllegiance() == gameManager.getTurn()) // Remove second condition to allow free piece movement
@@ -148,6 +148,25 @@ namespace SharpChess
                 displayUpdatedTileLabels(x, y); //Can eventually get rid of
             }
             boardPanel.Refresh();
+        }
+
+        private void playMove(Tile oldTile, Tile currentTile, Piece capturedPiece, bool undoMove) //move eventually?  //TODO: issue with pawns somewhere in here....
+        {
+            gameManager.playMove(oldTile.getCurrentPiece(), oldTile, currentTile, undoMove);
+            drawSquare(oldTile.x, oldTile.y);
+            drawBackPlacedPiece(currentTile.x, currentTile.y);
+            resetPotentialCoordinates();
+            if (undoMove)
+            {
+                gameManager.moveManager.removeLastMove();
+                if (capturedPiece != null)
+                {
+                    oldTile.setPiece(capturedPiece);
+                    drawBackPlacedPiece(oldTile.x, oldTile.y);
+                }
+            }
+            moveState = MoveState.NO_SELECTION;
+            testPotentialDestinations(currentTile);
         }
 
         // Paints new board
@@ -226,40 +245,9 @@ namespace SharpChess
             moveState = MoveState.NO_SELECTION;
         }
 
-        //Preparations for the next click after a move and/or undo
-        private void updateBoardInformation()
-        {
-            resetPotentialCoordinates();
-            moveState = MoveState.NO_SELECTION;
-            currentCoordinateClicked = new Tuple<int, int>(-1, -1);
-            boardPanel.Refresh();
-        }
-
         #endregion
 
-        #region -- Move Execution & Candidacy
-
-        //Executes a played move (by clicking and/or fast-forwarding a played game)
-        private void executeMove(Tile oldTile, Tile currentTile)
-        {
-            gameManager.executeMove(oldTile.getCurrentPiece(), oldTile, currentTile);
-            drawSquare(oldTile.x, oldTile.y);
-            drawBackPlacedPiece(currentTile.x, currentTile.y);
-            updateBoardInformation();
-        }
-
-        //Unexecutes a played move (by clicking and/or rewinding a played game)
-        private void unexecuteMove(Tile oldTile, Tile currentTile)
-        {
-            gameManager.unexecuteMove();
-            drawSquare(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
-            drawBackPlacedPiece(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
-            drawSquare(currentTile.x, currentTile.y);
-            drawBackPlacedPiece(oldTile.x, oldTile.y);
-            if (currentTile.hasPlacedPiece())
-                drawBackPlacedPiece(currentTile.x, currentTile.y);
-            updateBoardInformation();
-        }
+        #region -- Move Candidacy
 
         // Tests potential destinations given the current tile and piece
         private void testPotentialDestinations(Tile currentTile)
@@ -380,10 +368,9 @@ namespace SharpChess
 
         private void undo_btn_Click(object sender, EventArgs e)
         {
-            Move m = gameManager.moveManager.getRecentMove();
-            unexecuteMove(m.startTile, m.endTile);
-            /*Move lastMove = gameManager.moveManager.getRecentMove();
-            playMove(lastMove.endTile, lastMove.startTile, lastMove.capturedPiece, true);*/
+            Move lastMove = gameManager.moveManager.getRecentMove();
+            playMove(lastMove.endTile, lastMove.startTile, lastMove.capturedPiece, true);
+            //gameManager.moveManager.removeLastMove();
             if (gameManager.getMovesPlayed() == 0)
                 moveHistory_txtBox.Clear();
             else
