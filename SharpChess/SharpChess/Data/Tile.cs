@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpChess.Data.Pieces;
+﻿using SharpChess.Data.Pieces;
 
 namespace SharpChess.Data
 {

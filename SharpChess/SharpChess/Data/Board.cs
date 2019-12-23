@@ -6,7 +6,7 @@ namespace SharpChess.Data
     {
         private int boardSize;
         private Tile[,] tileMap;
-        private Tile selectedTile;
+        private Tile selectedTile; 
 
         //Sizable board
         public Board(int size)
@@ -43,26 +43,26 @@ namespace SharpChess.Data
         // Default chess pieces on a board
         public void setDefaultPieces()
         {
-            tileMap[0, 0].setPiece(new Rook(PieceAllegiance.BLACK));
-            tileMap[0, 1].setPiece(new Knight(PieceAllegiance.BLACK));
-            tileMap[0, 2].setPiece(new Bishop(PieceAllegiance.BLACK));
-            tileMap[0, 3].setPiece(new Queen(PieceAllegiance.BLACK));
-            tileMap[0, 4].setPiece(new King(PieceAllegiance.BLACK));
-            tileMap[0, 5].setPiece(new Bishop(PieceAllegiance.BLACK));
-            tileMap[0, 6].setPiece(new Knight(PieceAllegiance.BLACK));
-            tileMap[0, 7].setPiece(new Rook(PieceAllegiance.BLACK));
+            tileMap[7, 0].setPiece(new Rook(PieceAllegiance.BLACK));
+            tileMap[7, 1].setPiece(new Knight(PieceAllegiance.BLACK));
+            tileMap[7, 2].setPiece(new Bishop(PieceAllegiance.BLACK));
+            tileMap[7, 3].setPiece(new Queen(PieceAllegiance.BLACK));
+            tileMap[7, 4].setPiece(new King(PieceAllegiance.BLACK));
+            tileMap[7, 5].setPiece(new Bishop(PieceAllegiance.BLACK));
+            tileMap[7, 6].setPiece(new Knight(PieceAllegiance.BLACK));
+            tileMap[7, 7].setPiece(new Rook(PieceAllegiance.BLACK));
             for (int i = 0; i < boardSize; i++)
-                tileMap[1, i].setPiece(new Pawn(PieceAllegiance.BLACK));
+                tileMap[6, i].setPiece(new Pawn(PieceAllegiance.BLACK));
             for (int i = 0; i < boardSize; i++)
-                tileMap[6, i].setPiece(new Pawn(PieceAllegiance.WHITE));
-            tileMap[7, 0].setPiece(new Rook(PieceAllegiance.WHITE));
-            tileMap[7, 1].setPiece(new Knight(PieceAllegiance.WHITE));
-            tileMap[7, 2].setPiece(new Bishop(PieceAllegiance.WHITE));
-            tileMap[7, 4].setPiece(new King(PieceAllegiance.WHITE));
-            tileMap[7, 3].setPiece(new Queen(PieceAllegiance.WHITE));
-            tileMap[7, 5].setPiece(new Bishop(PieceAllegiance.WHITE));
-            tileMap[7, 6].setPiece(new Knight(PieceAllegiance.WHITE));
-            tileMap[7, 7].setPiece(new Rook(PieceAllegiance.WHITE));
+                tileMap[1, i].setPiece(new Pawn(PieceAllegiance.WHITE));
+            tileMap[0, 0].setPiece(new Rook(PieceAllegiance.WHITE));
+            tileMap[0, 1].setPiece(new Knight(PieceAllegiance.WHITE));
+            tileMap[0, 2].setPiece(new Bishop(PieceAllegiance.WHITE));
+            tileMap[0, 4].setPiece(new King(PieceAllegiance.WHITE));
+            tileMap[0, 3].setPiece(new Queen(PieceAllegiance.WHITE));
+            tileMap[0, 5].setPiece(new Bishop(PieceAllegiance.WHITE));
+            tileMap[0, 6].setPiece(new Knight(PieceAllegiance.WHITE));
+            tileMap[0, 7].setPiece(new Rook(PieceAllegiance.WHITE));
         }
 
         // Retrieves  the 2D tile map

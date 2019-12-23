@@ -68,11 +68,22 @@ namespace SharpChess.Policy
             {
                 if (Math.Abs(currentTile.y - newY) == DOUBLE_MOVE && findTile(newX, (currentTile.y + newY) / DOUBLE_MOVE).hasPlacedPiece())
                     return false;
-                else if ((currentTile.x - newX == 0) && !findTile(newX, newY).hasPlacedPiece())
+                else if (currentTile.x - newX == 0 && !findTile(newX, newY).hasPlacedPiece())
                     return true;
-                else if (findTile(newX, newY).hasPlacedPiece() && (currentTile.x - newX != 0))
-                    if (!testSameAllegiance(findTile(newX, newY).getCurrentPiece(), debatedPiece))
-                        return true;
+                else if (currentTile.x - newX != 0)
+                {
+                    if (findTile(newX, newY).hasPlacedPiece())
+                    {
+                        if (!testSameAllegiance(findTile(newX, newY).getCurrentPiece(), debatedPiece))
+                            return true;
+                    }
+                    else if (findTile(newX, currentTile.y).hasPlacedPiece())
+                    {
+                        Piece p = findTile(newX, currentTile.y).getCurrentPiece();
+                        if (p.toText() == 'P' && p.getMovesPlayed() == 1 && (findTile(newX, currentTile.y).y == 3 || findTile(newX, currentTile.y).y == BOARD_SIZE - 4)) //EN PASSANT (change later)
+                           return true;
+                    }
+                }
             }
             return false;
         }

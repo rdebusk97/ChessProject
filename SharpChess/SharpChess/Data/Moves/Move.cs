@@ -1,5 +1,6 @@
 ﻿using SharpChess.Data;
 using SharpChess.Data.Pieces;
+using SharpChess.Data.Moves;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +17,16 @@ namespace SharpChess.Policy
         public Tile endTile { get; private set; }
         public Piece movedPiece { get; private set; }
         public Piece capturedPiece { get; private set; }
+        public MoveType moveType { get; private set; }
 
         // Constructor for a move, with start/end tile, moved piece, and potential captured piece
-        public Move(Tile startTile, Tile endTile, Piece movedPiece, Piece capturedPiece)
+        public Move(Tile startTile, Tile endTile, Piece movedPiece, Piece capturedPiece, MoveType moveType)
         {
             this.startTile = startTile;
             this.endTile = endTile;
             this.movedPiece = movedPiece;
             this.capturedPiece = capturedPiece;
+            this.moveType = moveType;
         }
 
         // Converts coordinate notation to letter notation

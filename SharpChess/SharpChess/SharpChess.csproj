@@ -46,7 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Board.cs" />
-    <Compile Include="Data\Move.cs" />
+    <Compile Include="Data\Moves\Move.cs" />
+    <Compile Include="Data\Moves\MoveType.cs" />
     <Compile Include="Data\PieceAllegiance.cs" />
     <Compile Include="Data\Pieces\Bishop.cs" />
     <Compile Include="Data\Pieces\King.cs" />
@@ -56,7 +57,7 @@
     <Compile Include="Data\Pieces\Queen.cs" />
     <Compile Include="Data\Pieces\Rook.cs" />
     <Compile Include="Data\Tile.cs" />
-    <Compile Include="MoveState.cs" />
+    <Compile Include="Data\Moves\MoveState.cs" />
     <Compile Include="Policy\BoardManager.cs" />
     <Compile Include="Policy\GameManager.cs" />
     <Compile Include="Policy\MoveManager.cs" />

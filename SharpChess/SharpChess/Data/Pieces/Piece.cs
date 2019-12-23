@@ -33,12 +33,7 @@ namespace SharpChess.Data.Pieces
             movesPlayed--;
         }
 
-        // Returns how many times the piece has moved (noted for pawns/castling)
-        public int getMovesPlayed()
-        {
-            return movesPlayed;
-        }
-
+        public int getMovesPlayed() => movesPlayed;
         public PieceAllegiance getAllegiance() => allegiance;
         public List<Tuple<int, int>> getListOfGeneralMoves() => listOfGeneralMoves;
 

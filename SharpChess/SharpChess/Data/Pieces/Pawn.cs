@@ -47,10 +47,8 @@ namespace SharpChess.Data.Pieces
 
         private int getAllegianceValue()
         {
-            if (allegiance == PieceAllegiance.WHITE)
-                return -1;
-            else
-                return 1;
+            if (allegiance == PieceAllegiance.WHITE) { return 1; }
+            else { return -1; }
         }
 
         public override int toValue()

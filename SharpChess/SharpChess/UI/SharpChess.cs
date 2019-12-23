@@ -77,7 +77,7 @@ namespace SharpChess
             Image pieceImage = Image.FromFile(imagesDirectory + piece.toImage());
             Graphics graphics = Graphics.FromImage(boardMap);
             int tileSize = boardPanel.Height / boardSize;
-            int xPixel = tileSize * x, yPixel = tileSize * y;
+            int xPixel = tileSize * x, yPixel = tileSize * (boardSize - 1 - y);
             graphics.DrawImage(pieceImage, xPixel, yPixel, tileSize, tileSize);
             return boardMap;
         }
@@ -86,7 +86,7 @@ namespace SharpChess
         private Bitmap drawBorder(int x, int y, SolidBrush s)
         {
             int penThickness = 2, tileSize = (boardPanel.Height / boardSize);
-            int xCoordinate = tileSize * x, yCoordinate = tileSize * y;
+            int xCoordinate = tileSize * x, yCoordinate = tileSize * (boardSize - 1 - y);
             float ratio = .9f;
             Pen p = new Pen(Color.Black, penThickness);
             Graphics graphics = Graphics.FromImage(boardMap);
@@ -102,8 +102,8 @@ namespace SharpChess
         {
             Graphics graphics = Graphics.FromImage(boardMap);
             int tileSize = (boardPanel.Height / boardSize);
-            int xCoordinate = tileSize * x, yCoordinate = tileSize * y;
-            if (y % BOARD_COLORS != x % BOARD_COLORS)
+            int xCoordinate = tileSize * x, yCoordinate = tileSize * (boardSize - 1 - y);
+            if (y % BOARD_COLORS == x % BOARD_COLORS)
                 graphics.FillRectangle(beigeBrush, xCoordinate, yCoordinate, tileSize, tileSize);
             else
                 graphics.FillRectangle(tanBrush, xCoordinate, yCoordinate, tileSize, tileSize);
@@ -131,20 +131,21 @@ namespace SharpChess
         {
             Point point = boardPanel.PointToClient(Cursor.Position);
             int tileSize = boardPanel.Height / boardSize;
-            int x = point.X / tileSize, y = point.Y / tileSize;
-            Tile currentTile = gameManager.boardManager.findTile(x, y);
+            int x = point.X / tileSize, y = boardSize - 1 - (point.Y / tileSize);
+            Tile endTile = gameManager.boardManager.findTile(x, y);
             if (moveState == MoveState.SELECTED_START && checkPotentialDestinationList(x, y))
             {
-                Tile oldTile = gameManager.boardManager.findTile(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
-                executeMove(oldTile, currentTile);
+                Tile startTile = gameManager.boardManager.findTile(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
+                checkSpecialMoves(startTile, endTile);
+                executeMove(startTile, endTile);
                 printMove();
             }
-            else if (currentTile.hasPlacedPiece() && currentTile.getCurrentPiece().getAllegiance() == gameManager.getTurn()) // Remove second condition to allow free piece movement
+            else if (endTile.hasPlacedPiece() && endTile.getCurrentPiece().getAllegiance() == gameManager.getTurn()) // Remove second condition to allow free piece movement
             {
                 if (x != currentCoordinateClicked.Item1 || y != currentCoordinateClicked.Item2)
-                    newlyClickedCoordinate(currentTile);
+                    newlyClickedCoordinate(endTile);
                 else
-                    closingCurrentCoordinate(currentTile);
+                    closingCurrentCoordinate(endTile);
                 displayUpdatedTileLabels(x, y); //Can eventually get rid of
             }
             boardPanel.Refresh();
@@ -194,6 +195,13 @@ namespace SharpChess
 
         #region -- Helper Methods
 
+        private void checkSpecialMoves(Tile startTile, Tile endTile)
+        {
+            Piece currentPiece = startTile.getCurrentPiece();
+            if (currentPiece.toText() == 'P' && startTile.x != endTile.x)
+                drawSquare(endTile.x, startTile.y);
+
+        }
         // Draws any initial pieces that were placed on the board at startup
         private void drawInitialPieces()
         {
@@ -209,6 +217,7 @@ namespace SharpChess
             drawBackPlacedPiece(currentCoordinateClicked.Item1, currentCoordinateClicked.Item2);
             resetPotentialCoordinates();
             drawBorder(currentTile.x, currentTile.y, redBrush);
+            drawBackPlacedPiece(currentTile.x, currentTile.y);
             currentCoordinateClicked = Tuple.Create(currentTile.x, currentTile.y);
             gameManager.boardManager.getBoard().setTile(currentTile);
             moveState = MoveState.SELECTED_START;
@@ -258,6 +267,8 @@ namespace SharpChess
             drawBackPlacedPiece(oldTile.x, oldTile.y);
             if (currentTile.hasPlacedPiece())
                 drawBackPlacedPiece(currentTile.x, currentTile.y);
+            if (oldTile.getCurrentPiece().toText() == 'P' && currentTile.x != oldTile.x && currentTile.getCurrentPiece() == null) //EN PASSANT
+                drawBackPlacedPiece(currentTile.x, oldTile.y);
             updateBoardInformation();
         }
 
@@ -382,14 +393,11 @@ namespace SharpChess
         {
             Move m = gameManager.moveManager.getRecentMove();
             unexecuteMove(m.startTile, m.endTile);
-            /*Move lastMove = gameManager.moveManager.getRecentMove();
-            playMove(lastMove.endTile, lastMove.startTile, lastMove.capturedPiece, true);*/
             if (gameManager.getMovesPlayed() == 0)
                 moveHistory_txtBox.Clear();
             else
                 moveHistory_txtBox.Text = moveHistory_txtBox.Text.Remove(moveHistory_txtBox.Text.LastIndexOf('\n'));
             undo_btn.Enabled = false;
-            //boardPanel.Refresh();
         }
     }
 }

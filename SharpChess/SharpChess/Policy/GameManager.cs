@@ -1,5 +1,6 @@
-﻿using SharpChess.Data;
+﻿using SharpChess.Data;             
 using SharpChess.Data.Pieces;
+using SharpChess.Data.Moves;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,32 +14,42 @@ namespace SharpChess.Policy
         public BoardManager boardManager { get; private set; }
         public MoveManager moveManager { get; private set; }
 
-        private bool GAME_OVER = false;
-        private int movesPlayed = 0;
-        private PieceAllegiance pieceTurn = PieceAllegiance.WHITE;
+        //private bool GAME_OVER = false;
+        private int movesPlayed;
+        private PieceAllegiance pieceTurn;
 
         // Makes instances of the boardManager and moveManager
         public GameManager()
         {
             boardManager = new BoardManager();
             moveManager = new MoveManager();
+            movesPlayed = 0;
+            pieceTurn = PieceAllegiance.WHITE;
         }
 
         // Resets a game
         public void reset()
         {
-            GAME_OVER = false;
+            //GAME_OVER = false;
             pieceTurn = PieceAllegiance.WHITE;
             moveManager.clearList();
             movesPlayed = 0;
         }
 
+        private Move createMove(Piece piece, Tile startTile, Tile endTile)
+        {
+            Piece capturedPiece = endTile.getCurrentPiece();
+            if (piece is Pawn && startTile.x != endTile.x && capturedPiece == null)
+                return new Move(startTile, endTile, piece, capturedPiece, MoveType.EN_PASSANT);
+            else
+                return new Move(startTile, endTile, piece, capturedPiece, MoveType.REGULAR_MOVE);
+        }
+
         public void executeMove(Piece piece, Tile startTile, Tile endTile)
         {
-            Piece capturedPiece = null;
-            if (endTile.getCurrentPiece() != null)
-                capturedPiece = endTile.getCurrentPiece();
-            Move m = new Move(startTile, endTile, piece, capturedPiece);
+            Move m = createMove(piece, startTile, endTile);
+            if (m.moveType == MoveType.EN_PASSANT)
+                boardManager.findTile(m.endTile.x, m.startTile.y).removePiece();
             moveManager.executeMove(m);
             movesPlayed++;
             nextTurnSetup(piece);
@@ -48,8 +59,23 @@ namespace SharpChess.Policy
         {
             Move m = moveManager.getRecentMove();
             moveManager.unexecuteMove();
+            if (m.moveType == MoveType.EN_PASSANT)
+            {
+                Piece p = new Pawn(getTurn());
+                boardManager.findTile(m.endTile.x, m.startTile.y).setPiece(p);
+                p.doneMove();
+                p.populateGeneralMoves();
+            }
             movesPlayed--;
             nextTurnSetup(m.movedPiece);
+        }
+
+        private void undoEnPassant(Move m)
+        {
+            Piece p = new Pawn(getTurn());
+            boardManager.findTile(m.endTile.x, m.startTile.y).setPiece(p);
+            p.doneMove();
+            p.populateGeneralMoves();
         }
 
         private void nextTurnSetup(Piece piece)
